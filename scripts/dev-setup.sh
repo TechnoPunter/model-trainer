@@ -21,6 +21,7 @@ unlink trainer/strategies
 ln -sf "$STRATS_PATH" trainer/strategies
 
 mkdir logs
+mkdir generated
 mkdir tv-data
 mkdir tv-data/low-tf-data
 mkdir tv-data/base-data

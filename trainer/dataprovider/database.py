@@ -34,7 +34,7 @@ class DatabaseEngine:
         self.engine = self.get_connection()
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
-        self.package_name = 'predict.datamodels'
+        self.package_name = 'trainer.datamodels'
         self.tables = self.load_tables('../../', self.package_name)
 
     def __del__(self):

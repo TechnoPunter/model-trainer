@@ -11,7 +11,7 @@ import pandas as pd
 from pandasql import sqldf
 
 from trainer.config.reader import cfg
-from trainer.trainer.results import Result
+from trainer.analysis.results import Result
 
 BASE_PATH = cfg['generated']
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def get_base_data(base_path: str, scrip: str, strats: [str], calc_base: bool = T
         r = Result()
         dfs = []
         for strat in strats:
-            dfs.append(r.combine_results(path=os.path.join(base_path, scrip, "results", "predict.strategies." + strat),
+            dfs.append(r.combine_results(path=os.path.join(base_path, scrip, "results", "trainer.strategies." + strat),
                                          reg='*_PNL.csv'))
         df = pd.concat(dfs)
         logger.info(f"Combine Results: {len(df)}")

@@ -10,3 +10,6 @@ statsmodels
 scikit-learn
 tabulate
 pytz
+progressbar2
+matplotlib
+pandasql

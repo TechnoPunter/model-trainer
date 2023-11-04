@@ -1,5 +1,5 @@
 from trainer.loggers.setup_logger import setup_logging
-from trainer.train import ModelTrainer
+from trainer.service.train import ModelTrainer
 import logging
 
 logger = logging.getLogger(__name__)

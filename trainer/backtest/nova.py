@@ -250,7 +250,7 @@ if __name__ == "__main__":
     from trainer.dataprovider.filereader import get_tick_data
 
     path = '../../generated/'
-    pred_file = path + "predict.strategies.gspcV2.NSE_RELIANCE_Result.csv"
+    pred_file = path + "trainer.strategies.gspcV2.NSE_RELIANCE_Result.csv"
     pred_data = pd.read_csv(pred_file)
     tick_data = get_tick_data("NSE_RELIANCE")
     result_file = "reliance_output.csv"

@@ -57,7 +57,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
             elif param.get('models')[0].get('direction') == 'SELL':
                 s_trade = True
 
-    file = os.path.join(cfg['generated'], scrip, f'predict.strategies.{strategy}.{scrip}_Raw_Pred.csv')
+    file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
     results = pd.read_csv(file)
 
     results = results[['target', 'signal', 'time']]
@@ -151,7 +151,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
                   f"& PNL {format(s_pnl, '.2f')}")
         cols = ["open", "day_close", "target", "entry_price", "max_mtm", "target_pnl"]
         final_df[cols] = final_df[cols].astype(float).apply(lambda x: np.round(x, decimals=2))
-        final_df.to_csv(os.path.join(cfg['generated'], scrip, f'predict.strategies.{strategy}.{scrip}_Raw_Trades.csv'))
+        final_df.to_csv(os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades.csv'))
 
     return {
         "scrip": scrip, "strategy": strategy, "trades": len(final_df),
@@ -165,7 +165,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
 
 def combine_results(scrip: str):
     dfs = []
-    files = glob.glob(os.path.join(cfg['generated'], scrip, f'predict.strategies.*.{scrip}_Raw_Trades.csv'))
+    files = glob.glob(os.path.join(cfg['generated'], scrip, f'trainer.strategies.*.{scrip}_Raw_Trades.csv'))
     for file in files:
         dfs.append(pd.read_csv(file))
 

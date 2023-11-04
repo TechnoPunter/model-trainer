@@ -1,0 +1,1880 @@
+trade-exec-params:
+  push-trade-url: "https://gis.goawrd.gov.in/trade/trade"
+  get-trades-url: "https://gis.goawrd.gov.in/trade/trades"
+  get-quote-url: "https://gis.goawrd.gov.in/trade/get_quote"
+  get-ts-data-url: "https://gis.goawrd.gov.in/trade/get_ts_data"
+  email-trades-url: "http://trader.technotrix.co.in/www/dailyreport.php"
+  get-orders-url: "https://gis.goawrd.gov.in/trade/orders"
+  scrips:
+    - scripName: NSE_APOLLOHOSP
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_AXISBANK
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_AXISBANK
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BAJAJFINSV
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BHARTIARTL
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BHARTIARTL
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BRITANNIA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_CIPLA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_CIPLA
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_COALINDIA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_DIVISLAB
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_HCLTECH
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_HDFCLIFE
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_HEROMOTOCO
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ICICIBANK
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_INDUSINDBK
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_INFY
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_INFY
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_JSWSTEEL
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_M_M
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_M_M
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_NTPC
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_NESTLEIND
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ONGC
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ONGC
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SBILIFE
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SBILIFE
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SBIN
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SUNPHARMA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SUNPHARMA
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TCS
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TATACONSUM
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TATAMOTORS
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TECHM
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TITAN
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ULTRACEMCO
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: BUY
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_APOLLOHOSP
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_AXISBANK
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_AXISBANK
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BAJAJFINSV
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BHARTIARTL
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BHARTIARTL
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_BRITANNIA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_CIPLA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_CIPLA
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_COALINDIA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_DIVISLAB
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_HCLTECH
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_HDFCLIFE
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_HEROMOTOCO
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ICICIBANK
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_INDUSINDBK
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_INFY
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_INFY
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_JSWSTEEL
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_M_M
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_M_M
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_NTPC
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_NESTLEIND
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ONGC
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ONGC
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SBILIFE
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SBILIFE
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SBIN
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SUNPHARMA
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_SUNPHARMA
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TCS
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TATACONSUM
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TATAMOTORS
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TECHM
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_TITAN
+      models:
+        - name: trainer.strategies.gspcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+    - scripName: NSE_ULTRACEMCO
+      models:
+        - name: trainer.strategies.rfcV2
+          direction: SELL
+      accounts:
+        - name: Trader-V2-Alan
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Pralhad
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0
+        - name: Trader-V2-Sundar
+          quantity-params:
+            type: Risk_Per_Trade
+            risk: 100
+          sendToBroker: True
+          sl_factor: 0.02
+          tgt_factor: 1.0

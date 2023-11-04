@@ -4,6 +4,7 @@ trainer/strategies
 logs
 tv-data
 Trader
+generated
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,5 +1,4 @@
 import datetime
-import glob
 import logging
 import math
 import os
@@ -9,10 +8,9 @@ from urllib.request import urlopen
 
 import numpy as np
 import pandas as pd
+from trainer.datamodels import SlThresholds
 
 from trainer.config.reader import cfg
-from trainer.datamodels import SlThresholds
-from trainer.dataprovider.broker import Broker
 from trainer.dataprovider.database import DatabaseEngine
 from trainer.dataprovider.filereader import get_base_data
 from trainer.utils.EmailAlert import send_email
@@ -26,7 +24,6 @@ SCRIP_MAP = {'BAJAJ_AUTO-EQ': 'BAJAJ-AUTO-EQ', 'M_M-EQ': 'M&M-EQ'}
 class Combiner:
     symbols = pd.DataFrame
     trader_db = DatabaseEngine
-    broker = Broker
 
     def __init__(self):
         self.trader_db = DatabaseEngine()

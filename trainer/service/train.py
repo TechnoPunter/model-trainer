@@ -258,7 +258,7 @@ class ModelTrainer:
         #
         # # Iterate over the data array
         # for pred_key, df in ra_data.items():
-        #     sheet_name = pred_key.replace("predict.strategies.", "")
+        #     sheet_name = pred_key.replace("trainer.strategies.", "")
         #     # Write each DataFrame to a separate sheet
         #     df['datein'] = df['datein'].dt.tz_localize(None)
         #     df['dateout'] = df['dateout'].dt.tz_localize(None)
@@ -284,7 +284,7 @@ class ModelTrainer:
             opts = self.cfg['steps']['opts']
         ra_data = {}
 
-        strategies = self.get_strats_modules('../../', 'predict.strategies')
+        strategies = self.get_strats_modules('../../', 'trainer.strategies')
 
         if "tv-download" in opts:
             tv = TvDatafeed(self.cfg['trading-view']['username'], self.cfg['trading-view']['secret'])
@@ -343,7 +343,7 @@ class ModelTrainer:
 
 
 if __name__ == "__main__":
-    import predict.loggers.setup_logger
+    import trainer.loggers.setup_logger
 
     logger.info("Started steps")
     mt = ModelTrainer()
