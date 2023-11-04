@@ -1,0 +1,1 @@
+30   16   * * 1-5 sh  /var/www/model-trainer/scripts/exec-model-train.sh
