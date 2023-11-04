@@ -1,0 +1,8 @@
+# List of all files included here
+include:
+  - path-params
+  - secrets
+  - training-params
+  - steps-config
+  - event-conditions
+  - alert

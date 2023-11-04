@@ -1,0 +1,41 @@
+event-conditions:
+  - 0:
+      - event: entry-long
+        type: independent
+        conditions:
+          - column: None
+            predicate: " == True"
+            function: get_entry_condition(direction=1, row=row)
+      - event: entry-short
+        type: independent
+        conditions:
+          - column: None
+            predicate: " == True"
+            function: get_entry_condition(direction=-1, row=row)
+  - 1:
+      - event: exit-sl
+        type: order-based
+        conditions:
+          - column: None
+            predicate: " == True"
+            function: get_sl_condition(row, order)
+  - 2:
+      - event: exit-target
+        type: order-based
+        conditions:
+          - column: None
+            predicate: " == True"
+            function: get_target_condition(row, order)
+  - 3:
+      - event: trail-sl
+        type: order-based
+        conditions:
+          - column: None
+            predicate: " == True"
+            function: get_trail_sl_condition(row, order)
+  - 4:
+      - event: exit-cob
+        type: independent
+        conditions:
+          - column: cob_entry
+            predicate: " == 1.0"

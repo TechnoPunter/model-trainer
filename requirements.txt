@@ -1,0 +1,11 @@
+numpy
+pandas
+pyyaml
+requests
+chevron
+sqlalchemy
+psycopg2-binary
+websocket-client
+statsmodels
+scikit-learn
+tabulate

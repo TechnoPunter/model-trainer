@@ -1,0 +1,84 @@
+steps:
+  opts:
+#    - run-tpot
+    - tv-download
+#    - run-backtest
+    - run-next-close
+    - combine-predictions
+#    - run-analysis
+#    - run-ranking
+#    - run-accuracy
+#    - load-results
+  analysis:
+    mode: goal-seek
+  #  mode: calc
+    goal-seek:
+      min_target: 0.1
+      max_target: 3.0
+      target_step: 0.1
+      min_sl: 0.1
+      max_sl: 5.0
+      sl_step: 0.1
+      min_trail_sl: 0.1
+      max_trail_sl: 1.0
+      trail_sl_step: 0.1
+    calc:
+      target: 0.0
+      sl: 1.1
+      trail_sl: 0.1
+  strats:
+    - gspcV2
+    - rfcV2
+  scrips:
+    - NSE_APOLLOHOSP
+    - NSE_ASIANPAINT
+    - NSE_AXISBANK
+    - NSE_BAJAJ_AUTO
+    - NSE_BAJFINANCE
+    - NSE_BAJAJFINSV
+    - NSE_BPCL
+    - NSE_BHARTIARTL
+    - NSE_BRITANNIA
+    - NSE_CIPLA
+    - NSE_COALINDIA
+    - NSE_DIVISLAB
+    - NSE_DRREDDY
+    - NSE_EICHERMOT
+    - NSE_GRASIM
+    - NSE_HCLTECH
+    - NSE_HDFCBANK
+    - NSE_HDFCLIFE
+    - NSE_HEROMOTOCO
+    - NSE_HINDALCO
+    - NSE_HINDUNILVR
+    - NSE_ICICIBANK
+    - NSE_ITC
+    - NSE_INDUSINDBK
+    - NSE_INFY
+    - NSE_JSWSTEEL
+    - NSE_KOTAKBANK
+    - NSE_LTIM
+    - NSE_LT
+    - NSE_M_M
+    - NSE_MARUTI
+    - NSE_NTPC
+    - NSE_NESTLEIND
+    - NSE_ONGC
+    - NSE_POWERGRID
+    - NSE_RELIANCE
+    - NSE_SBILIFE
+    - NSE_SBIN
+    - NSE_SUNPHARMA
+    - NSE_TCS
+    - NSE_TATACONSUM
+    - NSE_TATAMOTORS
+    - NSE_TATASTEEL
+    - NSE_TECHM
+    - NSE_TITAN
+    - NSE_UPL
+    - NSE_ULTRACEMCO
+    - NSE_WIPRO
+    - NSE_BANDHANBNK
+#    - NSE_NIFTY1!
+#    - NSE_ADANIENT
+#    - NSE_ADANIPORTS
