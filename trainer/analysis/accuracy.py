@@ -84,7 +84,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
 
     merged_df['is_valid'] = merged_df.apply(is_valid, axis=1)
     merged_df['entry_price'] = merged_df['open'][merged_df['is_valid']]
-    merged_df['entry_price'] = merged_df['entry_price'].fillna(method='ffill')
+    merged_df['entry_price'] = merged_df['entry_price'].ffill()
 
     # Check if signal is valid i.e. Direction has travel at SOD
     valid_df = merged_df.loc[merged_df.is_valid]
@@ -93,8 +93,8 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     # Remove invalid day rows
     merged_df = merged_df[merged_df.date.isin(valid_df.index)]
 
-    merged_df['curr_target'] = merged_df['target'].fillna(method='ffill')
-    merged_df['curr_signal'] = merged_df['signal'].fillna(method='ffill')
+    merged_df['curr_target'] = merged_df['target'].ffill()
+    merged_df['curr_signal'] = merged_df['signal'].ffill()
 
     merged_df['mtm'] = merged_df.apply(calc_mtm, axis=1)
     merged_df['target_met'] = merged_df.apply(target_met, axis=1)
@@ -110,6 +110,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     final_df['target_pnl'] = final_df.apply(get_target_pnl, axis=1)
     final_df['target_pnl'] = final_df.apply(get_eod_pnl, axis=1)
     final_df['strategy'] = strategy
+    final_df = final_df.assign(trade_enabled=False)
     final_df.loc[final_df.signal == 1, 'trade_enabled'] = l_trade
     final_df.loc[final_df.signal == -1, 'trade_enabled'] = s_trade
     final_df.drop(columns=['high', 'low', 'close'], axis=1, inplace=True)

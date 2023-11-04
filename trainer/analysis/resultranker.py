@@ -10,8 +10,8 @@ import numpy as np
 import pandas as pd
 from pandasql import sqldf
 
-from trainer.config.reader import cfg
 from trainer.analysis.results import Result
+from trainer.config.reader import cfg
 
 BASE_PATH = cfg['generated']
 logger = logging.getLogger(__name__)
@@ -191,8 +191,8 @@ def post_proc():
     for _, row in df.iterrows():
         curr_df = pd.read_csv(fnmatch.filter(files, "*" + row.model)[0])
         curr_df = curr_df.loc[(curr_df.dir == row.dir)]
-        curr_df[['model', 'target_pct', 'sl_pct', 'trail_sl_pct']] = row[
-            ['model', 'target_pct', 'sl_pct', 'trail_sl_pct']]
+        curr_df.assign(model=row['model'], target_pct=row['target_pct'], sl_pct=row['sl_pct'],
+                       trail_sl_pct=row['trail_sl_pct'], )
         curr_df['trade_dttm'] = pd.to_datetime(curr_df['datein'])
         curr_df['trade_dt'] = curr_df['trade_dttm'].dt.date
         curr_df.drop(columns=['trade_dttm'], axis=1, inplace=True)
