@@ -17,13 +17,14 @@ fi
 cd "$CURR_PATH" || exit 1
 
 STRATS_PATH="$CURR_PATH"/../prediction-models/strategies
+unlink trainer/strategies
 ln -sf "$STRATS_PATH" trainer/strategies
 
 mkdir logs
 mkdir tv-data
 mkdir tv-data/low-tf-data
 mkdir tv-data/base-data
-read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox:" -r dropbox
+read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox: " -r dropbox
 ln -sf "$dropbox"/Trader .
 
 echo "Done!"
