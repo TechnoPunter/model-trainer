@@ -31,9 +31,11 @@ mkdir generated/summary
 mkdir tv-data
 mkdir tv-data/low-tf-data
 mkdir tv-data/base-data
-read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox:" -r dropbox
+read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox: " -r dropbox
 ln -sf "$dropbox"/Trader .
 ln -sf "$dropbox"/Trader/secret .
 cd logs || exit 1
 ln -sf "$dropbox"/Trader/model-trainer-V1/logs/archive .
 
+echo "Please create / check secrets-local.yaml file in resources/config directory!"
+echo "Done!"
