@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+# Need to reach Project Root
 MODULE_NAME=model-trainer
 CURR_PATH=$(pwd)
 
@@ -16,17 +17,21 @@ fi
 
 cd "$CURR_PATH" || exit 1
 
-STRATS_PATH="$CURR_PATH"/../prediction-models/strategies
-cd trainer || exit 1
-ln -sf "$STRATS_PATH" .
+
+# Install & create venv
+sudo apt-get install python-virtualenv
+virtualenv --python=/usr/bin/python3.10 .venv
+
+source .venv/bin/activate
+pip install -r requirements.txt
 
 mkdir logs
-mkdir generated
-mkdir generated/summary
 mkdir tv-data
 mkdir tv-data/low-tf-data
 mkdir tv-data/base-data
-read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox: " -r dropbox
+read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox:" -r dropbox
 ln -sf "$dropbox"/Trader .
+ln -sf "$dropbox"/Trader/secret .
+cd logs || exit 1
+ln -sf "$dropbox"/Trader/model-trainer-V1/logs/archive .
 
-echo "Done!"
