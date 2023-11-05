@@ -1,4 +1,4 @@
 base-data-dir-path:
-  - /var/www/TraderV3/tv-data/base-data/
+  - /var/www/model-trainer/tv-data/base-data/
 low-tf-data-dir-path:
-  - /var/www/TraderV3/tv-data/low-tf-data/
+  - /var/www/model-trainer/tv-data/low-tf-data/
