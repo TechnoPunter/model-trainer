@@ -26,6 +26,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 mkdir logs
+mkdir generated
+mkdir generated/summary
 mkdir tv-data
 mkdir tv-data/low-tf-data
 mkdir tv-data/base-data
