@@ -27,6 +27,13 @@ mkdir tv-data
 mkdir tv-data/low-tf-data
 mkdir tv-data/base-data
 read -p "Please Enter Dropbox Path: E.g. /Users/user/Dropbox: " -r dropbox
-ln -sf "$dropbox"/Trader .
 
+if [[ -d $dropbox ]]; then
+  sleep 1
+else
+  echo "Please check $dropbox directory!"
+  exit 1
+fi
+
+ln -sf "$dropbox"/Trader .
 echo "Done!"
