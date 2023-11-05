@@ -1,1 +1,3 @@
 30   16   * * 1-5 sh  /var/www/model-trainer/scripts/exec-model-train.sh
+00   17   * * 1-5 sh  /var/www/trade-exec-engine/scripts/logs-cleanup.sh
+
