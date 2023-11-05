@@ -14,7 +14,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -26,7 +26,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -38,7 +38,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -50,7 +50,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -62,7 +62,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -74,7 +74,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -86,7 +86,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
@@ -98,7 +98,7 @@ trade-exec-params:
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
-            risk: 1
+            quantity: 1
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
