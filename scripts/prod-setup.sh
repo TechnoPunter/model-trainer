@@ -44,7 +44,7 @@ ln -sf "$dropbox"/Trader/model-trainer-V1/logs/archive .
 
 
 FILE=resources/config/secrets-local.yaml
-if [ -f $FILE ]; then
+if [[ -f $FILE ]]; then
   echo "Done!"
 else
   echo "Please create / check secrets-local.yaml file in resources/config directory!"
