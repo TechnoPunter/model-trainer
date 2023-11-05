@@ -25,6 +25,11 @@ virtualenv --python=/usr/bin/python3.10 .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
+# Get prediction models linked
+STRATS_PATH="$CURR_PATH"/../prediction-models/strategies
+cd trainer || exit 1
+ln -sf "$STRATS_PATH" .
+
 mkdir logs
 mkdir generated
 mkdir generated/summary
@@ -37,5 +42,10 @@ ln -sf "$dropbox"/Trader/secret .
 cd logs || exit 1
 ln -sf "$dropbox"/Trader/model-trainer-V1/logs/archive .
 
-echo "Please create / check secrets-local.yaml file in resources/config directory!"
-echo "Done!"
+
+FILE=resources/config/secrets-local.yaml
+if [ -f $FILE ]; then
+  echo "Done!"
+else
+  echo "Please create / check secrets-local.yaml file in resources/config directory!"
+fi
