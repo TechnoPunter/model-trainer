@@ -80,7 +80,8 @@ class TestStrategy(bt.Strategy):
                 if self.data_target[1] > self.data_open[1]:
                     self.log(f"BUY CREATE, {self.data_open[1]}, Target {self.data_target[1]}")
                     self.trade_id += 1
-                    self.order = self.buy(tradeid=self.trade_id)
+                    self.order = self.buy_bracket(tradeid=self.trade_id, exectype=Order.Market,
+                                                  limitprice=self.data_target[1], stopexec=None)
                 else:
                     self.log(f"Invalid BUY Signal, {self.datas[0].datetime.datetime(1)}, Target {self.data_target[1]}")
             elif self.data_signal[0] == -1:
@@ -88,26 +89,15 @@ class TestStrategy(bt.Strategy):
                 if self.data_target[1] < self.data_open[1]:
                     self.log(f"SELL CREATE, {self.data_open[1]}, Target {self.data_target[1]}")
                     self.trade_id += 1
-                    self.order = self.sell(tradeid=self.trade_id)
+                    self.order = self.sell_bracket(tradeid=self.trade_id, exectype=Order.Market,
+                                                   limitprice=self.data_target[1], stopexec=None)
                 else:
                     self.log(f"Invalid SELL Signal, {self.datas[0].datetime.datetime(1)}, Target {self.data_target[1]}")
 
         else:
-            # Target Handling
-            if self.position.size == 1:
-                # self.log(f"Validating {self.data_target[1]} <= {self.data_open[1]}")
-                if self.data_target[1] <= self.data_high[1]:
-                    self.log(f"Target: SELL CREATED, {self.data_open[1]}, Target {self.data_target[1]}")
-                    self.order = self.sell(tradeid=self.trade_id, price=self.data_target[1], exectype=Order.Limit)
-            elif self.position.size == -1:
-                # self.log(f"Validating {self.data_target[1]} < {self.data_open[1]}")
-                if {self.data_target[1]} >= {self.data_low[1]}:
-                    self.log(f"Target: BUY CREATED, {self.data_open[1]}, Target {self.data_target[1]}")
-                    self.order = self.buy(tradeid=self.trade_id, price=self.data_target[1], exectype=Order.Limit)
+            # Target Handling - Not required due to bracket orders
 
-            if self.order:
-                return
-
+            # Close of Business handling
             if self.data_cob_entry[0] == 1:
                 self.order = self.close(tradeid=self.trade_id)
 
