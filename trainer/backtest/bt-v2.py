@@ -1,7 +1,7 @@
 import backtrader as bt
 import pandas as pd
 import pytz
-from backtrader import feeds as btfeeds
+from backtrader import feeds as btfeeds, Order
 
 from trainer.backtest.nova import Nova
 
@@ -27,11 +27,15 @@ class TestStrategy(bt.Strategy):
     def __init__(self):
         # Grab all attributes needed for processing
         self.data_open = self.datas[0].open
+        self.data_high = self.datas[0].high
+        self.data_low = self.datas[0].low
         self.data_close = self.datas[0].close
         self.data_time = self.datas[0].time
         self.data_signal = self.datas[0].curr_signal
         self.data_target = self.datas[0].curr_target
         self.data_cob_entry = self.datas[0].next_cob_entry
+        self.trade_id = 0
+        self.params = pd.DataFrame()
 
         # To keep track of pending orders
         self.order = None
@@ -46,8 +50,12 @@ class TestStrategy(bt.Strategy):
         if order.status in [order.Completed]:
             if order.isbuy():
                 self.log('BUY EXECUTED, %.2f' % order.executed.price)
+                self.params.loc[order.params.tradeid, 'buy_price'] = order.executed.price
+                self.params.loc[order.params.tradeid, 'buy_time'] = self.datas[0].datetime.datetime(0)
             elif order.issell():
                 self.log('SELL EXECUTED, %.2f' % order.executed.price)
+                self.params.loc[order.params.tradeid, 'sell_price'] = order.executed.price
+                self.params.loc[order.params.tradeid, 'sell_time'] = self.datas[0].datetime.datetime(0)
 
             self.bar_executed = len(self)
 
@@ -71,14 +79,16 @@ class TestStrategy(bt.Strategy):
                 # self.log(f"Validating {self.data_target[1]} > {self.data_open[1]}")
                 if self.data_target[1] > self.data_open[1]:
                     self.log(f"BUY CREATE, {self.data_open[1]}, Target {self.data_target[1]}")
-                    self.order = self.buy()
+                    self.trade_id += 1
+                    self.order = self.buy(tradeid=self.trade_id)
                 else:
                     self.log(f"Invalid BUY Signal, {self.datas[0].datetime.datetime(1)}, Target {self.data_target[1]}")
             elif self.data_signal[0] == -1:
                 # self.log(f"Validating {self.data_target[1]} < {self.data_open[1]}")
                 if self.data_target[1] < self.data_open[1]:
                     self.log(f"SELL CREATE, {self.data_open[1]}, Target {self.data_target[1]}")
-                    self.order = self.sell()
+                    self.trade_id += 1
+                    self.order = self.sell(tradeid=self.trade_id)
                 else:
                     self.log(f"Invalid SELL Signal, {self.datas[0].datetime.datetime(1)}, Target {self.data_target[1]}")
 
@@ -86,35 +96,23 @@ class TestStrategy(bt.Strategy):
             # Target Handling
             if self.position.size == 1:
                 # self.log(f"Validating {self.data_target[1]} <= {self.data_open[1]}")
-                if self.data_target[1] <= self.data_open[1]:
+                if self.data_target[1] <= self.data_high[1]:
                     self.log(f"Target: SELL CREATED, {self.data_open[1]}, Target {self.data_target[1]}")
-                    self.order = self.sell()
+                    self.order = self.sell(tradeid=self.trade_id, price=self.data_target[1], exectype=Order.Limit)
             elif self.position.size == -1:
                 # self.log(f"Validating {self.data_target[1]} < {self.data_open[1]}")
-                if {self.data_target[1]} >= {self.data_open[1]}:
+                if {self.data_target[1]} >= {self.data_low[1]}:
                     self.log(f"Target: BUY CREATED, {self.data_open[1]}, Target {self.data_target[1]}")
-                    self.order = self.buy()
+                    self.order = self.buy(tradeid=self.trade_id, price=self.data_target[1], exectype=Order.Limit)
 
             if self.order:
                 return
 
             if self.data_cob_entry[0] == 1:
-                if self.position.size == 1:
-                    self.log('COB SELL CREATE, %.2f' % self.data_close[0])
-                    self.order = self.sell()
-                elif self.position.size == -1:
-                    self.log('COB BUY CREATE, %.2f' % self.data_close[0])
-                    self.order = self.buy()
-            # Already in the market ... we might sell
-            # if len(self) >= (self.bar_executed + 5):
-            #     # SELL, SELL, SELL!!! (with all possible default parameters)
-            #     self.log('SELL CREATE, %.2f' % self.data_close[0])
-            #
-            #     # Keep track of the created order to avoid a 2nd order
-            #     self.order = self.sell()
+                self.order = self.close(tradeid=self.trade_id)
 
 
-def run_strat():
+def run_strategy():
     # Create a cerebro entity
     cerebro = bt.Cerebro(stdstats=False)
 
@@ -150,11 +148,16 @@ def run_strat():
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     # Run over everything
-    cerebro.run()
+    back = cerebro.run()
 
     # Print out the final result
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    trades = back[0].params
+    for idx, row in trades.iterrows():
+        trades.loc[idx, 'PNL'] = row.sell_price - row.buy_price
+    print(trades)
+    trades.to_clipboard()
 
 
 if __name__ == '__main__':
-    run_strat()
+    run_strategy()
