@@ -1,6 +1,6 @@
 import logging
 
-from trainer.loggers.setup_logger import setup_logging
+from commons.loggers.setup_logger import setup_logging
 from trainer.service.train import ModelTrainer
 
 logger = logging.getLogger(__name__)

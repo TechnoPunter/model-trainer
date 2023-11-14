@@ -3,9 +3,9 @@ import os
 import numpy as np
 import pandas as pd
 
-from trainer.config.reader import cfg
-from trainer.consts.consts import IST
-from trainer.dataprovider.filereader import get_tick_data, get_base_data
+from commons.config.reader import cfg
+from commons.consts.consts import IST
+from commons.dataprovider.filereader import get_tick_data, get_base_data
 
 
 def get_target_pnl(row):

@@ -11,7 +11,7 @@ import pandas as pd
 from pandasql import sqldf
 
 from trainer.analysis.results import Result
-from trainer.config.reader import cfg
+from commons.config.reader import cfg
 
 BASE_PATH = cfg['generated']
 logger = logging.getLogger(__name__)

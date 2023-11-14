@@ -13,3 +13,4 @@ pytz
 progressbar2
 matplotlib
 pandasql
+git+https://github.com/TechnoPunter/TechnoPunter-Commons.git

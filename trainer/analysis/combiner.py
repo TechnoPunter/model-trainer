@@ -8,11 +8,11 @@ from urllib.request import urlopen
 
 import numpy as np
 import pandas as pd
-from trainer.datamodels import SlThresholds
+from commons.models import SlThresholds
 
-from trainer.config.reader import cfg
-from trainer.dataprovider.database import DatabaseEngine
-from trainer.dataprovider.filereader import get_base_data
+from commons.config.reader import cfg
+from commons.dataprovider.database import DatabaseEngine
+from commons.dataprovider.filereader import get_base_data
 from trainer.utils.EmailAlert import send_email
 
 logger = logging.getLogger(__name__)

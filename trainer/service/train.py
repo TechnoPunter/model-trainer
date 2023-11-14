@@ -6,12 +6,12 @@ from multiprocessing import Pool
 import pandas as pd
 
 from trainer.backtest.nova import Nova
-from trainer.config.reader import cfg
-from trainer.consts.consts import *
-from trainer.dataprovider.database import DatabaseEngine
-from trainer.dataprovider.filereader import get_base_data, get_tick_data
-from trainer.dataprovider.tvfeed import Interval
-from trainer.dataprovider.tvfeed import TvDatafeed
+from commons.config.reader import cfg
+from commons.consts.consts import *
+from commons.dataprovider.database import DatabaseEngine
+from commons.dataprovider.filereader import get_base_data, get_tick_data
+from commons.dataprovider.tvfeed import Interval
+from commons.dataprovider.tvfeed import TvDatafeed
 from trainer.utils.standard_prep import standard_prep
 from trainer.analysis.accuracy import run_accuracy
 from trainer.analysis.combiner import Combiner
@@ -343,7 +343,7 @@ class ModelTrainer:
 
 
 if __name__ == "__main__":
-    import trainer.loggers.setup_logger
+    import commons.loggers.setup_logger
 
     logger.info("Started steps")
     mt = ModelTrainer()
