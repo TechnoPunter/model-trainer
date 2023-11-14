@@ -1,6 +1,11 @@
 #!/bin/sh
-cd /var/www/model-trainer/
-. /var/www/model-trainer/.venv/bin/activate
+BASE_DIR=/var/www/model-trainer/
+cd "$BASE_DIR"
+. "$BASE_DIR"/.venv/bin/activate
+
+export GENERATED_PATH="$BASE_DIR"/generated
+export RESOURCE_PATH="$BASE_DIR"/resources/config
+export LOG_PATH="$BASE_DIR"/logs
 
 python /var/www/model-trainer/portfolio-analysis.py 1> logs/exec-portfolio-analysis.log 2> logs/exec-portfolio-analysis.err
 
