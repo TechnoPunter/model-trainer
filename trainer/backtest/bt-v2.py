@@ -5,16 +5,20 @@ from backtrader import feeds as btfeeds, Order
 
 from trainer.backtest.nova import Nova
 
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.options.mode.chained_assignment = None
+
 
 # adding lines for calculated fields
 class CustomDataLoader(btfeeds.PandasData):
-    lines = ('time', 'curr_signal', 'curr_target', 'next_cob_entry',)
+    lines = ('time', 'signal', 'target', 'cob_entry',)
     params = (('time', 0),
-              ('next_cob_entry', 5),
-              ('curr_target', 6),
-              ('curr_signal', 7)
+              ('signal', 5),
+              ('target', 6),
+              ('cob_entry', 7),
               )
-    datafields = btfeeds.PandasData.datafields + (['time', 'curr_signal', 'curr_target', 'next_cob_entry'])
+    datafields = btfeeds.PandasData.datafields + (['time', 'signal', 'target', 'cob_entry'])
 
 
 class TestStrategy(bt.Strategy):
@@ -31,9 +35,9 @@ class TestStrategy(bt.Strategy):
         self.data_low = self.datas[0].low
         self.data_close = self.datas[0].close
         self.data_time = self.datas[0].time
-        self.data_signal = self.datas[0].curr_signal
-        self.data_target = self.datas[0].curr_target
-        self.data_cob_entry = self.datas[0].next_cob_entry
+        self.data_signal = self.datas[0].signal
+        self.data_target = self.datas[0].target
+        self.data_cob_entry = self.datas[0].cob_entry
         self.trade_id = 0
         self.params = pd.DataFrame()
 
@@ -65,34 +69,30 @@ class TestStrategy(bt.Strategy):
         # Write down: no pending order
         self.order = None
 
-    def next(self):
+    def operate(self):
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
             return
-
-        # self.log(f"{self.data_signal[0]} for {self.data_target[1]} > {self.data_open[1]} ep: {self.data_time[1]}")
 
         # Check if we are in the market
         if not self.position:
 
             if self.data_signal[0] == 1:
-                # self.log(f"Validating {self.data_target[1]} > {self.data_open[1]}")
-                if self.data_target[1] > self.data_open[1]:
-                    self.log(f"BUY CREATE, {self.data_open[1]}, Target {self.data_target[1]}")
+                if self.data_target[0] > self.data_open[0]:
+                    self.log(f"BUY CREATE, {self.data_open[0]}, Target {self.data_target[0]}")
                     self.trade_id += 1
                     self.order = self.buy_bracket(tradeid=self.trade_id, exectype=Order.Market,
-                                                  limitprice=self.data_target[1], stopexec=None)
+                                                  limitprice=self.data_target[0], stopexec=None)
                 else:
-                    self.log(f"Invalid BUY Signal, {self.datas[0].datetime.datetime(1)}, Target {self.data_target[1]}")
+                    self.log(f"Invalid BUY Signal, {self.datas[0].datetime.datetime(0)}, Target {self.data_target[0]}")
             elif self.data_signal[0] == -1:
-                # self.log(f"Validating {self.data_target[1]} < {self.data_open[1]}")
-                if self.data_target[1] < self.data_open[1]:
-                    self.log(f"SELL CREATE, {self.data_open[1]}, Target {self.data_target[1]}")
+                if self.data_target[0] < self.data_open[0]:
+                    self.log(f"SELL CREATE, {self.data_open[0]}, Target {self.data_target[0]}")
                     self.trade_id += 1
                     self.order = self.sell_bracket(tradeid=self.trade_id, exectype=Order.Market,
-                                                   limitprice=self.data_target[1], stopexec=None)
+                                                   limitprice=self.data_target[0], stopexec=None)
                 else:
-                    self.log(f"Invalid SELL Signal, {self.datas[0].datetime.datetime(1)}, Target {self.data_target[1]}")
+                    self.log(f"Invalid SELL Signal, {self.datas[0].datetime.datetime(0)}, Target {self.data_target[0]}")
 
         else:
             # Target Handling - Not required due to bracket orders
@@ -101,10 +101,16 @@ class TestStrategy(bt.Strategy):
             if self.data_cob_entry[0] == 1:
                 self.order = self.close(tradeid=self.trade_id)
 
+    def next_open(self):
+        self.operate()
+
+    def prenext_open(self):
+        self.operate()
+
 
 def run_strategy():
     # Create a cerebro entity
-    cerebro = bt.Cerebro(stdstats=False)
+    cerebro = bt.Cerebro(stdstats=False, cheat_on_open=True)
 
     # Add a strategy
     cerebro.addstrategy(TestStrategy)
@@ -118,12 +124,8 @@ def run_strategy():
     pred_data['time'] = pred_data['time'].shift(-1)
     n = Nova(scrip="NSE_APOLLOHOSP", pred_df=pred_data, tick_df=tick_data)
     dataframe = n.data
-    dataframe['next_cob_entry'] = dataframe['cob_entry'].shift(-1)
-    dataframe['target'] = dataframe['target'].shift(-1)
-    dataframe['curr_target'] = dataframe['target'].ffill()
-    dataframe['curr_signal'] = dataframe['signal'].shift(-1)
-    dataframe.dropna(subset=['curr_target'], inplace=True)
-    dataframe.drop(columns=['target', 'signal', 'cob_entry'], axis=1, inplace=True)
+    dataframe['target'] = dataframe['target'].ffill()
+    dataframe.dropna(subset=['target'], inplace=True)
     dataframe.set_index('date', inplace=True)
 
     # Pass it to the backtrader datafeed and add it to the cerebro
