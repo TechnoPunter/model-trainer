@@ -53,15 +53,16 @@ class TestStrategy(bt.Strategy):
         # Attention: broker could reject order if not enough cash
         if order.status in [order.Completed]:
             if order.isbuy():
-                self.log('BUY EXECUTED, %.2f' % order.executed.price)
+                self.log(f'{order.params.tradeid}: BUY EXECUTED, %.2f' % order.executed.price)
                 self.params.loc[order.params.tradeid, 'buy_price'] = order.executed.price
                 self.params.loc[order.params.tradeid, 'buy_time'] = self.datas[0].datetime.datetime(0)
             elif order.issell():
-                self.log('SELL EXECUTED, %.2f' % order.executed.price)
+                self.log(f'{order.params.tradeid}: SELL EXECUTED, %.2f' % order.executed.price)
                 self.params.loc[order.params.tradeid, 'sell_price'] = order.executed.price
                 self.params.loc[order.params.tradeid, 'sell_time'] = self.datas[0].datetime.datetime(0)
 
             self.bar_executed = len(self)
+            print(self.params)
 
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
             self.log('Order Canceled/Margin/Rejected')
@@ -79,16 +80,16 @@ class TestStrategy(bt.Strategy):
 
             if self.data_signal[0] == 1:
                 if self.data_target[0] > self.data_open[0]:
-                    self.log(f"BUY CREATE, {self.data_open[0]}, Target {self.data_target[0]}")
                     self.trade_id += 1
+                    self.log(f"{self.trade_id}: BUY CREATE, {self.data_open[0]}, Target {self.data_target[0]}")
                     self.order = self.buy_bracket(tradeid=self.trade_id, exectype=Order.Market,
                                                   limitprice=self.data_target[0], stopexec=None)
                 else:
                     self.log(f"Invalid BUY Signal, {self.datas[0].datetime.datetime(0)}, Target {self.data_target[0]}")
             elif self.data_signal[0] == -1:
                 if self.data_target[0] < self.data_open[0]:
-                    self.log(f"SELL CREATE, {self.data_open[0]}, Target {self.data_target[0]}")
                     self.trade_id += 1
+                    self.log(f"{self.trade_id}: SELL CREATE, {self.data_open[0]}, Target {self.data_target[0]}")
                     self.order = self.sell_bracket(tradeid=self.trade_id, exectype=Order.Market,
                                                    limitprice=self.data_target[0], stopexec=None)
                 else:
