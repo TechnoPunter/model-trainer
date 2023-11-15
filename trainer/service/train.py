@@ -4,20 +4,20 @@ import os
 from multiprocessing import Pool
 
 import pandas as pd
-
-from trainer.backtest.nova import Nova
 from commons.config.reader import cfg
 from commons.consts.consts import *
 from commons.dataprovider.database import DatabaseEngine
 from commons.dataprovider.filereader import get_base_data, get_tick_data
 from commons.dataprovider.tvfeed import Interval
 from commons.dataprovider.tvfeed import TvDatafeed
-from trainer.utils.standard_prep import standard_prep
+
 from trainer.analysis.accuracy import run_accuracy
 from trainer.analysis.combiner import Combiner
-from trainer.analysis.results import Result
 from trainer.analysis.resultranker import rank_results
+from trainer.analysis.results import Result
+from trainer.backtest.nova import Nova
 from trainer.utils.TrainSplit import get_filtered_df
+from trainer.utils.standard_prep import standard_prep
 
 logger = logging.getLogger(__name__)
 
