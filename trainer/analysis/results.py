@@ -6,9 +6,9 @@ import os
 import pandas as pd
 import progressbar
 
-from trainer.config.reader import cfg
-from trainer.consts.consts import RAW_PRED_FILE_NAME
-from trainer.dataprovider.database import DatabaseEngine
+from commons.config.reader import cfg
+from commons.consts.consts import RAW_PRED_FILE_NAME
+from commons.dataprovider.database import DatabaseEngine
 
 TABLE = 'TrainingResult'
 TODAY = str(datetime.datetime.today().date())

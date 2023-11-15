@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Literal, Dict, get_args
 
 from trainer.backtest.nova_order import OrderBook
-from trainer.consts.consts import IST
+from commons.consts.consts import IST
 import logging
 
 logger = logging.getLogger(__name__)

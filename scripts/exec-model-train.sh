@@ -1,8 +1,13 @@
 #!/bin/sh
-cd /var/www/model-trainer/
-. /var/www/model-trainer/.venv/bin/activate
+BASE_DIR=/var/www/model-trainer/
+cd "$BASE_DIR"
+. "$BASE_DIR"/.venv/bin/activate
 
-python /var/www/model-trainer/model-train.py 1> logs/exec-model-train.log 2> logs/exec-model-train.err
+export GENERATED_PATH="$BASE_DIR"/generated
+export RESOURCE_PATH="$BASE_DIR"/resources/config
+export LOG_PATH="$BASE_DIR"/logs
+
+python "$BASE_DIR"/model-train.py 1> logs/exec-model-train.log 2> logs/exec-model-train.err
 
 # Backup the files now
 today="$(date -I)"

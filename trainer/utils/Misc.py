@@ -2,7 +2,7 @@ import datetime
 import logging
 import time
 
-from trainer.consts.consts import IST
+from commons.consts.consts import IST
 
 logger = logging.getLogger(__name__)
 

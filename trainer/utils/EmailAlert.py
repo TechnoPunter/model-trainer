@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 
-from trainer.config.reader import cfg
+from commons.config.reader import cfg
 
 headers = {
     'Content-Type': 'application/x-www-form-urlencoded'

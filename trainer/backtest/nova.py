@@ -29,8 +29,8 @@ from tabulate import tabulate
 from trainer.backtest.nova_event import EventManager, EventCondition
 from trainer.backtest.nova_order import OrderBook
 from trainer.backtest.nova_trades import TradeBook, Trade
-from trainer.config.reader import cfg
-from trainer.consts.consts import IST, GENERATED_DATA_PATH
+from commons.config.reader import cfg
+from commons.consts.consts import IST, GENERATED_DATA_PATH
 import logging
 
 logger = logging.getLogger(__name__)
@@ -247,7 +247,7 @@ class Nova:
 
 
 if __name__ == "__main__":
-    from trainer.dataprovider.filereader import get_tick_data
+    from commons.dataprovider.filereader import get_tick_data
 
     path = '../../generated/'
     pred_file = path + "trainer.strategies.gspcV2.NSE_RELIANCE_Result.csv"

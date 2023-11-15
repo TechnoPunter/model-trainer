@@ -1,6 +1,6 @@
 import pandas as pd
 
-from trainer.consts.consts import IST
+from commons.consts.consts import IST
 
 
 def get_target(row):

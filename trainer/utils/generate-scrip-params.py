@@ -3,8 +3,8 @@ import os.path
 import chevron
 import pandas as pd
 
-from trainer.dataprovider.database import DatabaseEngine
-from trainer.config.reader import cfg
+from commons.dataprovider.database import DatabaseEngine
+from commons.config.reader import cfg
 
 PATH = '../../resources/templates/scrip-trade-exec-params.yaml'
 MODE = 'RANK'  # 'ACCURACY'
