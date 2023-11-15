@@ -289,8 +289,10 @@ class ModelTrainer:
         if "tv-download" in opts:
             tv = TvDatafeed(self.cfg['trading-view']['username'], self.cfg['trading-view']['secret'])
 
-            tv.get_tv_data(freq=Interval.in_daily, path=self.cfg['base-data-dir-path'], start=800)
-            tv.get_tv_data(freq=Interval.in_1_minute, path=self.cfg['low-tf-data-dir-path'])
+            tv.get_tv_data(symbols=self.cfg['steps']['scrips'], freq=Interval.in_daily,
+                           path=self.cfg['base-data-dir-path'], start=800)
+            tv.get_tv_data(symbols=self.cfg['steps']['scrips'], freq=Interval.in_1_minute,
+                           path=self.cfg['low-tf-data-dir-path'])
 
         for scrip in self.cfg['steps']['scrips']:
 
