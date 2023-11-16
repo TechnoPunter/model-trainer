@@ -2,14 +2,13 @@ import os.path
 
 import chevron
 import pandas as pd
-
-from commons.dataprovider.database import DatabaseEngine
 from commons.config.reader import cfg
+from commons.dataprovider.database import DatabaseEngine
 
 PATH = '../../resources/templates/scrip-trade-exec-params.yaml'
 MODE = 'RANK'  # 'ACCURACY'
 RANK_FILE_NAME = 'summary/Portfolio-Rank.csv'
-ACCURACY_FILE_NAME = 'summary/Portfolio-Accuracy.csv'
+QUANTITY_FILE_NAME = 'summary/Portfolio-Quantity.csv'
 MIN_PNL = 1
 trader_db = DatabaseEngine()
 
@@ -36,21 +35,19 @@ def form_trade_params(mode: str, summary_data: pd.DataFrame = None):
         filter_data = summary_data.loc[(summary_data.tot_pnl_pct >= MIN_PNL)]
         filter_data['strategy'] = filter_data['model'].apply(lambda model: model.split(".")[2])
     else:  # mode == 'ACCURACY'
-        long_df = summary_data.loc[summary_data.l_cap_pct > (MIN_PNL / 100)]
-        if len(long_df) > 0:
-            long_df.insert(0, 'dir', 'BUY')
-            filter_data = long_df
-        else:
-            filter_data = pd.DataFrame()
-        short_df = summary_data.loc[summary_data.l_cap_pct > (MIN_PNL / 100)]
-        if len(short_df) > 0:
-            short_df.insert(0, 'dir', 'SELL')
-            filter_data = pd.concat([filter_data, short_df])
+        filter_data = summary_data.loc[summary_data.qty > 0]
     for index, row in filter_data.iterrows():
+        if row.direction == 1:
+            curr_dir = 'BUY'
+        elif row.direction == -1:
+            curr_dir = 'SELL'
+        else:
+            curr_dir = 'X'
         params = {
             "scrip_name": row.scrip,
             "strategy": row.strategy,
-            "direction": row.dir
+            "direction": curr_dir,
+            "qty": row.qty
         }
         results += get_scrip_config(params)
     return results
@@ -70,7 +67,7 @@ if __name__ == "__main__":
     if MODE == 'RANK':
         file = os.path.join(cfg['generated'], RANK_FILE_NAME)
     else:  # MODE == 'ACCURACY'
-        file = os.path.join(cfg['generated'], ACCURACY_FILE_NAME)
+        file = os.path.join(cfg['generated'], QUANTITY_FILE_NAME)
     df = pd.read_csv(file)
     res = form_trade_params(mode=MODE, summary_data=df)
     print(res)

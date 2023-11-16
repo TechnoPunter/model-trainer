@@ -5,35 +5,32 @@
       accounts:
         - name: Trader-V2-Alan
           quantity-params:
-            type: Risk_Per_Trade
-            risk: 100
+            type: Fixed
+            risk: 0
+            quantity: {{ qty }}
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
         - name: Trader-V2-Pralhad
           quantity-params:
-            type: Risk_Per_Trade
-            risk: 100
+            type: Fixed
+            risk: 0
+            quantity: {{ qty }}
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
         - name: Trader-V2-Sundar
           quantity-params:
-            type: Risk_Per_Trade
-            risk: 100
-          sendToBroker: True
-          sl_factor: 0.02
-          tgt_factor: 1.0
-        - name: Trader-V2-Sundar
-          quantity-params:
-            type: Risk_Per_Trade
-            risk: 100
+            type: Fixed
+            risk: 0
+            quantity: {{ qty }}
           sendToBroker: True
           sl_factor: 0.02
           tgt_factor: 1.0
         - name: Trader-V2-Mahi
           quantity-params:
             type: Fixed
+            risk: 0
             quantity: 1
           sendToBroker: True
           sl_factor: 0.02
