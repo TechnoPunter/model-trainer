@@ -1,0 +1,5 @@
+scrip,strategy,trades,pct_success,tot_pnl,tot_avg_cost,l_trades,l_pct_success,l_pnl,l_avg_cost,l_cap_pct,s_trades,s_pct_success,s_pnl,s_avg_cost,s_cap_pct
+NSE_APOLLOHOSP,gspcV2,45,73.33,-511.08,5037.73,42,73.81,-329.31,5042.02,-0.33,3,66.67,-181.77,4977.72,-0.18
+NSE_APOLLOHOSP,rfcV2,81,54.32,398.16,5030.57,46,39.13,12.21,4962.31,0.01,35,74.29,385.95,5120.29,0.38
+NSE_ASIANPAINT,gspcV2,55,87.27,63.97,3268.38,37,86.49,-88.94,3300.29,-0.13,18,88.89,152.91,3202.79,0.24
+NSE_ASIANPAINT,rfcV2,72,50.00,-307.65,3244.49,43,46.51,-244.76,3230.37,-0.38,29,55.17,-62.89,3265.42,-0.10
