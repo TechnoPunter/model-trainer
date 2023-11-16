@@ -132,7 +132,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     final_df.loc[final_df.signal == -1, 'trade_enabled'] = s_trade
     final_df.loc[final_df.signal == -1, 'qty'] = s_qty
     final_df['final_pnl'] = final_df.apply(get_final_pnl, axis=1)
-    final_df = final_df.assign(X=lambda r: r.open * r.qty)
+    final_df = final_df.assign(margin=lambda r: r.open * r.qty)
     final_df.drop(columns=['high', 'low', 'close'], axis=1, inplace=True)
 
     pct_success = 0
