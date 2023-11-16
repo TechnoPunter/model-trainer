@@ -97,6 +97,13 @@ class ModelTrainer:
         return
 
     def __analyse(self, strategies, scrip_name: str, params: dict):
+        """
+        Calls run_scenario to create PNL Files for each of the strategies with set or range of SL/Target/Trail SL
+        :param strategies:
+        :param scrip_name:
+        :param params:
+        :return:
+        """
         ra_list = {}
         range_list = []  # SL / Trail SL / Target range combination
         run_list = []  # Strategy / Range List combination

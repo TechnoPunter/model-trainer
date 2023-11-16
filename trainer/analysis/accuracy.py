@@ -1,8 +1,8 @@
 import glob
 import os
+
 import numpy as np
 import pandas as pd
-
 from commons.config.reader import cfg
 from commons.consts.consts import IST
 from commons.dataprovider.filereader import get_tick_data, get_base_data
@@ -13,6 +13,10 @@ def get_target_pnl(row):
         return 0
     else:
         return abs(row['open'] - row['target'])
+
+
+def get_final_pnl(row):
+    return row['target_pnl'] * row['qty']
 
 
 def get_eod_pnl(row):
@@ -50,12 +54,24 @@ def calc_mtm(row):
 def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     l_trade = False
     s_trade = False
+    l_qty = 1
+    s_qty = 1
     for param in trade_exec_params:
         if param.get('models')[0].get('name').split('.')[2] == strategy:
             if param.get('models')[0].get('direction') == 'BUY':
                 l_trade = True
+                qty_params = param.get('accounts')[0].get('quantity-params')
+                if qty_params.get('type') == 'Fixed':
+                    l_qty = qty_params.get('quantity')
+                else:
+                    l_qty = 1
             elif param.get('models')[0].get('direction') == 'SELL':
                 s_trade = True
+                qty_params = param.get('accounts')[0].get('quantity-params')
+                if qty_params.get('type') == 'Fixed':
+                    s_qty = qty_params.get('quantity')
+                else:
+                    s_qty = 1
 
     file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
     results = pd.read_csv(file)
@@ -112,7 +128,10 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     final_df['strategy'] = strategy
     final_df = final_df.assign(trade_enabled=False)
     final_df.loc[final_df.signal == 1, 'trade_enabled'] = l_trade
+    final_df.loc[final_df.signal == 1, 'qty'] = l_qty
     final_df.loc[final_df.signal == -1, 'trade_enabled'] = s_trade
+    final_df.loc[final_df.signal == -1, 'qty'] = s_qty
+    final_df['final_pnl'] = final_df.apply(get_final_pnl, axis=1)
     final_df.drop(columns=['high', 'low', 'close'], axis=1, inplace=True)
 
     pct_success = 0
@@ -129,7 +148,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
 
     if len(final_df) > 0:
         pct_success = (final_df['target_candle'].notna().sum() / len(final_df)) * 100
-        tot_pnl = final_df['target_pnl'].sum()
+        tot_pnl = final_df['final_pnl'].sum()
         tot_avg_cost = final_df['entry_price'].mean()
         print(f"For {scrip} using {strategy}: No. of trades: {len(final_df)} "
               f"with {format(pct_success, '.2f')}% Accuracy "
@@ -138,19 +157,19 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
         if len(l_trades) > 0:
             l_pct_success = (l_trades['target_candle'].notna().sum() / len(l_trades)) * 100
             l_avg_cost = l_trades['entry_price'].mean()
-            l_pnl = l_trades['target_pnl'].sum()
+            l_pnl = l_trades['final_pnl'].sum()
             print(f"For {scrip} using {strategy}: Long: No. of trades: {len(l_trades)} "
                   f"with {format(l_pct_success, '.2f')}% Accuracy "
                   f"& PNL {format(l_pnl, '.2f')}")
         s_trades = final_df.loc[final_df.signal == -1]
         if len(s_trades) > 0:
             s_pct_success = (s_trades['target_candle'].notna().sum() / len(s_trades)) * 100
-            s_pnl = s_trades['target_pnl'].sum()
+            s_pnl = s_trades['final_pnl'].sum()
             s_avg_cost = s_trades['entry_price'].mean()
             print(f"For {scrip} using {strategy}: Short: No. of trades: {len(s_trades)} "
                   f"with {format(s_pct_success, '.2f')}% Accuracy "
                   f"& PNL {format(s_pnl, '.2f')}")
-        cols = ["open", "day_close", "target", "entry_price", "max_mtm", "target_pnl"]
+        cols = ["open", "day_close", "target", "entry_price", "max_mtm", "target_pnl", "final_pnl"]
         final_df[cols] = final_df[cols].astype(float).apply(lambda x: np.round(x, decimals=2))
         final_df.to_csv(os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades.csv'))
 
@@ -158,9 +177,9 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
         "scrip": scrip, "strategy": strategy, "trades": len(final_df),
         "pct_success": pct_success, "tot_pnl": tot_pnl, "tot_avg_cost": tot_avg_cost,
         "l_trades": len(l_trades), "l_pct_success": l_pct_success, "l_pnl": l_pnl, "l_avg_cost": l_avg_cost,
-        "l_cap_pct": l_pnl / (l_avg_cost * 0.2),
+        "l_cap_pct": l_pnl / (l_avg_cost * 0.2), "l_qty": l_qty,
         "s_trades": len(s_trades), "s_pct_success": s_pct_success, "s_pnl": s_pnl, "s_avg_cost": s_avg_cost,
-        "s_cap_pct": s_pnl / (s_avg_cost * 0.2)
+        "s_cap_pct": s_pnl / (s_avg_cost * 0.2), "s_qty": s_qty,
     }
 
 
