@@ -47,7 +47,7 @@ def form_trade_params(mode: str, summary_data: pd.DataFrame = None):
             "scrip_name": row.scrip,
             "strategy": row.strategy,
             "direction": curr_dir,
-            "qty": row.qty
+            "qty": int(row.qty)
         }
         results += get_scrip_config(params)
     return results
