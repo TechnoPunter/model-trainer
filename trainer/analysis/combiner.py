@@ -25,6 +25,10 @@ ACCURACY_COLS = ["scrip", "strategy", "entry_pct", "l_pct_success", "l_pct", "s_
 MODEL_PREFIX = 'trainer.strategies.'
 
 
+def calc_weight(row):
+    return row['entry_pct'] * row['pct_success'] * row['pct_ret']
+
+
 class Combiner:
     symbols = pd.DataFrame
     trader_db = DatabaseEngine
@@ -94,10 +98,12 @@ class Combiner:
         """
         if len(df) == 0:
             return pd.DataFrame()
-        alloc_per_scrip = capital / len(df)
+        df['weight'] = df.apply(calc_weight, axis=1)
+        df['pct_weight'] = (df['weight'] / df['weight'].sum()) * 100
+        df['alloc'] = df['pct_weight'].mul(capital / 100)
         df["type"] = "Fixed"
         df["risk"] = 0
-        df["quantity"] = df.apply(lambda row: math.floor(alloc_per_scrip / row.close), axis=1)
+        df["quantity"] = df.apply(lambda row: math.floor(row.alloc / row.close), axis=1)
         return df
 
     @staticmethod
