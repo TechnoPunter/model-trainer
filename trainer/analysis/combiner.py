@@ -159,6 +159,8 @@ class Combiner:
             filter_pred = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
             val = self.__get_quantity(filter_pred, cap)
             val = val.loc[val.quantity > 0]
+            val.drop(columns=["strategy", "entry_pct", "pct_success", "pct_ret", "weight", "pct_weight", "alloc"],
+                     axis=1, inplace=True)
             val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
 
         val_res = self.__validate()
