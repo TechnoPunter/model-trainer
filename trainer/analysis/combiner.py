@@ -151,11 +151,14 @@ class Combiner:
                 dfs.append(curr_df)
         self.pred = pd.concat(dfs)
         self.pred.to_csv(PRED_FILE, float_format='%.2f', index=False)
-        filter_pred = self.__apply_filter()
+        self.__get_pred_with_accuracy()
         for acct in cfg['steps']['accounts']:
             key = acct['name']
             cap = acct['capital']
+            threshold = acct.get('threshold', cfg['steps']['threshold'])
+            filter_pred = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
             val = self.__get_quantity(filter_pred, cap)
+            val = val.loc[val.quantity > 0]
             val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
 
         val_res = self.__validate()
@@ -165,7 +168,7 @@ class Combiner:
             send_email(body="Model Training complete")
         return dfs
 
-    def __apply_filter(self):
+    def __apply_filter(self, min_pct_ret, min_pct_success):
         """
         1. Read Portfolio Accuracy file
         2. Join with today's Trade Entries
@@ -177,14 +180,9 @@ class Combiner:
             d. Create final Entries file
         :return:
         """
-        df = self.__get_pred_with_accuracy()
-        min_pct_ret = cfg['steps']['threshold']['min_pct_ret']
-        min_pct_success = cfg['steps']['threshold']['min_pct_success']
-        valid_df = df.loc[(df.pct_ret > min_pct_ret) & (df.pct_success > min_pct_success)]
-        return valid_df
+        return self.pred.loc[(self.pred.pct_ret > min_pct_ret) & (self.pred.pct_success > min_pct_success)]
 
-    @staticmethod
-    def __get_pred_with_accuracy():
+    def __get_pred_with_accuracy(self):
         pred = pd.read_csv(PRED_FILE)
         accuracy = pd.read_csv(ACCURACY_FILE)
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
@@ -193,7 +191,7 @@ class Combiner:
                                      axis=1)
         df["pct_ret"] = df.apply(lambda row: row['l_pct'] if row['signal'] == 1 else row['s_pct'], axis=1)
         df.drop(columns=['l_pct_success', 'l_pct', 's_pct_success', 's_pct'], axis=1, inplace=True)
-        return df
+        self.pred = df
 
 
 if __name__ == "__main__":
