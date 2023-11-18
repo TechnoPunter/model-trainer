@@ -2,3 +2,4 @@ base-data-dir-path:
   - /var/www/model-trainer/tv-data/base-data/
 low-tf-data-dir-path:
   - /var/www/model-trainer/tv-data/low-tf-data/
+  - /root/Dropbox/Trader/tv-data/low-tf-data
