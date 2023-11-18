@@ -10,8 +10,8 @@ steps:
 #    - run-accuracy
 #    - load-results
   analysis:
-    mode: goal-seek
-  #  mode: calc
+#    mode: goal-seek
+    mode: calc
     goal-seek:
       min_target: 0.1
       max_target: 3.0
@@ -82,3 +82,15 @@ steps:
 #    - NSE_NIFTY1!
 #    - NSE_ADANIENT
 #    - NSE_ADANIPORTS
+  threshold:
+    min_pct_ret: 1
+    min_pct_success: 60
+  accounts:
+    - name: Trader-V2-Alan
+      capital: 1000000
+    - name: Trader-V2-Pralhad
+      capital: 1000000
+    - name: Trader-V2-Sundar
+      capital: 100000
+    - name: Trader-V2-Mahi
+      capital: 10000

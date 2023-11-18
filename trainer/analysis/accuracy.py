@@ -7,6 +7,10 @@ from commons.config.reader import cfg
 from commons.consts.consts import IST
 from commons.dataprovider.filereader import get_tick_data, get_base_data
 
+ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
+TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
+MODEL_PREFIX = 'trainer.strategies.'
+
 
 def get_target_pnl(row):
     if pd.isnull(row['target_candle']):
@@ -60,18 +64,8 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
         if param.get('models')[0].get('name').split('.')[2] == strategy:
             if param.get('models')[0].get('direction') == 'BUY':
                 l_trade = True
-                qty_params = param.get('accounts')[0].get('quantity-params')
-                if qty_params.get('type') == 'Fixed':
-                    l_qty = qty_params.get('quantity')
-                else:
-                    l_qty = 1
             elif param.get('models')[0].get('direction') == 'SELL':
                 s_trade = True
-                qty_params = param.get('accounts')[0].get('quantity-params')
-                if qty_params.get('type') == 'Fixed':
-                    s_qty = qty_params.get('quantity')
-                else:
-                    s_qty = 1
 
     file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
     results = pd.read_csv(file)
@@ -83,6 +77,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     results['date'] = results['date'].dt.date
     # Remove last row after offset of time
     results.dropna(subset=['date'], inplace=True)
+    count = len(results)
 
     tick_data = get_tick_data(scrip)
     base_data = get_base_data(scrip)
@@ -125,7 +120,7 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
 
     final_df['target_pnl'] = final_df.apply(get_target_pnl, axis=1)
     final_df['target_pnl'] = final_df.apply(get_eod_pnl, axis=1)
-    final_df['strategy'] = strategy
+    final_df['strategy'] = MODEL_PREFIX + strategy
     final_df = final_df.assign(trade_enabled=False)
     final_df.loc[final_df.signal == 1, 'trade_enabled'] = l_trade
     final_df.loc[final_df.signal == 1, 'qty'] = l_qty
@@ -135,9 +130,6 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     final_df = final_df.assign(margin=lambda r: r.open * r.qty)
     final_df.drop(columns=['high', 'low', 'close'], axis=1, inplace=True)
 
-    pct_success = 0
-    tot_pnl = 0
-    tot_avg_cost = 0.01
     l_trades = 0
     l_pct_success = 0
     l_pnl = 0
@@ -150,7 +142,6 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     if len(final_df) > 0:
         pct_success = (final_df['target_candle'].notna().sum() / len(final_df)) * 100
         tot_pnl = final_df['final_pnl'].sum()
-        tot_avg_cost = final_df['entry_price'].mean()
         print(f"For {scrip} using {strategy}: No. of trades: {len(final_df)} "
               f"with {format(pct_success, '.2f')}% Accuracy "
               f"& PNL {format(tot_pnl, '.2f')}")
@@ -175,12 +166,12 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
         final_df.to_csv(os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades.csv'))
 
     return {
-        "scrip": scrip, "strategy": strategy, "trades": len(final_df),
-        "pct_success": pct_success, "tot_pnl": tot_pnl, "tot_avg_cost": tot_avg_cost,
+        "scrip": scrip, "strategy": MODEL_PREFIX + strategy,
+        "trades": len(final_df), "entry_pct": len(final_df) * 100 / count,
         "l_trades": len(l_trades), "l_pct_success": l_pct_success, "l_pnl": l_pnl, "l_avg_cost": l_avg_cost,
-        "l_cap_pct": l_pnl / (l_avg_cost * 0.2), "l_qty": l_qty,
+        "l_pct": l_pnl * 100 / l_avg_cost,
         "s_trades": len(s_trades), "s_pct_success": s_pct_success, "s_pnl": s_pnl, "s_avg_cost": s_avg_cost,
-        "s_cap_pct": s_pnl / (s_avg_cost * 0.2), "s_qty": s_qty,
+        "s_pct": s_pnl * 100 / s_avg_cost
     }
 
 
@@ -211,11 +202,9 @@ def run_accuracy():
         scrip_trades.append(combine_results(scrip))
     result = pd.DataFrame(res)
     result_trades = pd.concat(scrip_trades)
-    result_path = os.path.join(cfg['generated'], 'summary', "Portfolio-Accuracy.csv")
-    result_trades_path = os.path.join(cfg['generated'], 'summary', "Portfolio-Trades.csv")
-    result.to_csv(result_path, float_format='%.2f', index=False)
+    result.to_csv(ACCURACY_FILE, float_format='%.2f', index=False)
     result_trades.sort_values(by=['date', 'scrip'], inplace=True)
-    result_trades.to_csv(result_trades_path, float_format='%.2f', index=False)
+    result_trades.to_csv(TRADES_FILE, float_format='%.2f', index=False)
     return result
 
 

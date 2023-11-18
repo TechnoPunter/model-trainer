@@ -8,17 +8,21 @@ from urllib.request import urlopen
 
 import numpy as np
 import pandas as pd
-from commons.models import SlThresholds
-
 from commons.config.reader import cfg
 from commons.dataprovider.database import DatabaseEngine
 from commons.dataprovider.filereader import get_base_data
+from commons.models import SlThresholds
+
 from trainer.utils.EmailAlert import send_email
 
 logger = logging.getLogger(__name__)
 
 SYMBOL_MASTER = "https://api.shoonya.com/NSE_symbols.txt.zip"
 SCRIP_MAP = {'BAJAJ_AUTO-EQ': 'BAJAJ-AUTO-EQ', 'M_M-EQ': 'M&M-EQ'}
+PRED_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Pred.csv')
+ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
+ACCURACY_COLS = ["scrip", "strategy", "entry_pct", "l_pct_success", "l_pct", "s_pct_success", "s_pct"]
+MODEL_PREFIX = 'trainer.strategies.'
 
 
 class Combiner:
@@ -28,6 +32,7 @@ class Combiner:
     def __init__(self):
         self.trader_db = DatabaseEngine()
         self.thresholds = self.__get_sl_thresholds()
+        self.pred = pd.DataFrame()
         zip_file_name = 'NSE_symbols.zip'
         token_file_name = 'NSE_symbols.txt'
 
@@ -70,7 +75,7 @@ class Combiner:
         return self.thresholds.get(key)
 
     @staticmethod
-    def __get_quantity(df: pd.DataFrame):
+    def __get_quantity(df: pd.DataFrame, capital: float):
         """
 
         Args:
@@ -87,20 +92,21 @@ class Combiner:
         Returns:
             {"quantity": quantity}
         """
-        row = df.iloc[0]
-        if row.type == "Fixed":
-            return row.quantity
-        elif row.type == "Risk_Per_Trade":
-            sl_range = row.close * float(row.sl_pct / 100)
-            return math.floor(row.risk / sl_range)
+        if len(df) == 0:
+            return pd.DataFrame()
+        alloc_per_scrip = capital / len(df)
+        df["type"] = "Fixed"
+        df["risk"] = 0
+        df["quantity"] = df.apply(lambda row: math.floor(alloc_per_scrip / row.close), axis=1)
+        return df
 
     @staticmethod
     def __validate():
         df = []
         # Get the latest record from Low TF Data
-        for scrip in cfg['trade-exec-params']['scrips']:
-            scrip_data = get_base_data(scrip['scripName'])
-            scrip_data.loc[:, 'scrip'] = scrip['scripName']
+        for scrip in cfg['steps']['scrips']:
+            scrip_data = get_base_data(scrip)
+            scrip_data.loc[:, 'scrip'] = scrip
             last_row = scrip_data.iloc[[-1]]
             last_row.reset_index(inplace=True)
             df.append(last_row)
@@ -114,20 +120,18 @@ class Combiner:
             return None
 
     def combine_predictions(self):
-        dfs = {}
-        for scrip in cfg['trade-exec-params']['scrips']:
-            scrip_name = scrip['scripName']
+        dfs = []
+        for scrip_name in cfg['steps']['scrips']:
             logger.info(f"Processing {scrip_name}")
-            model = scrip['models'][0]['name']
-            exchange = scrip_name.split("_")[0]
-            symbol = scrip_name.replace(exchange + "_", "") + "-EQ"
-            file = os.path.join(cfg['generated'], scrip_name, f'{model}.{scrip_name}_Next_Close.csv')
-            curr_df = pd.read_csv(file)
-            if len(curr_df) == 0:
-                logger.info(f"No records for {scrip_name} & {model} combination")
-                return
-            if curr_df['signal'].iloc[0] == (1 if scrip['models'][0]['direction'] == 'BUY' else -1):
-                logger.debug(f"Valid record for {scrip_name} & {model} combination in {curr_df['signal']} direction")
+            for key in cfg['steps']['strats']:
+                model = MODEL_PREFIX + key
+                exchange = scrip_name.split("_")[0]
+                symbol = scrip_name.replace(exchange + "_", "") + "-EQ"
+                file = os.path.join(cfg['generated'], scrip_name, f'{model}.{scrip_name}_Next_Close.csv')
+                curr_df = pd.read_csv(file)
+                if len(curr_df) == 0:
+                    logger.info(f"No records for {scrip_name} & {model} combination")
+                    return
                 curr_df = curr_df[['close', 'signal', 'target']]
                 curr_df[['scrip', 'model']] = [[scrip_name, model]]
                 curr_df[['exchange', 'symbol']] = [[exchange, symbol]]
@@ -138,14 +142,14 @@ class Combiner:
                         [threshold.target, threshold.sl, threshold.trail_sl, threshold.tick]]
                 else:
                     curr_df[['target_pct', 'sl_pct', 'trail_sl_pct', 'tick']] = np.NaN
-                for acct in scrip['accounts']:
-                    name = acct['name']
-                    acct_df = curr_df.join(pd.DataFrame([acct['quantity-params']]))
-                    qty = self.__get_quantity(acct_df)
-                    if qty > 0:
-                        acct_df['quantity'] = qty
-                        dfs[name] = pd.concat([dfs.get(name, pd.DataFrame()), acct_df])
-        for key, val in dfs.items():
+                dfs.append(curr_df)
+        self.pred = pd.concat(dfs)
+        self.pred.to_csv(PRED_FILE, float_format='%.2f', index=False)
+        filter_pred = self.__apply_filter()
+        for acct in cfg['steps']['accounts']:
+            key = acct['name']
+            cap = acct['capital']
+            val = self.__get_quantity(filter_pred, cap)
             val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
 
         val_res = self.__validate()
@@ -155,10 +159,38 @@ class Combiner:
             send_email(body="Model Training complete")
         return dfs
 
+    def __apply_filter(self):
+        """
+        1. Read Portfolio Accuracy file
+        2. Join with today's Trade Entries
+        3. Remove below threshold
+        4. For each account
+            a. Get Capital
+            b. Get Allocation percent --> todo: Use a sophisticated mechanism
+            c. Calculate Quantity
+            d. Create final Entries file
+        :return:
+        """
+        df = self.__get_pred_with_accuracy()
+        min_pct_ret = cfg['steps']['threshold']['min_pct_ret']
+        min_pct_success = cfg['steps']['threshold']['min_pct_success']
+        valid_df = df.loc[(df.pct_ret > min_pct_ret) & (df.pct_success > min_pct_success)]
+        return valid_df
+
+    @staticmethod
+    def __get_pred_with_accuracy():
+        pred = pd.read_csv(PRED_FILE)
+        accuracy = pd.read_csv(ACCURACY_FILE)
+        df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
+                      right_on=["scrip", "strategy"])
+        df["pct_success"] = df.apply(lambda row: row['l_pct_success'] if row['signal'] == 1 else row['s_pct_success'],
+                                     axis=1)
+        df["pct_ret"] = df.apply(lambda row: row['l_pct'] if row['signal'] == 1 else row['s_pct'], axis=1)
+        df.drop(columns=['l_pct_success', 'l_pct', 's_pct_success', 's_pct'], axis=1, inplace=True)
+        return df
+
 
 if __name__ == "__main__":
-    import predict.loggers.setup_logger
-
     c = Combiner()
     res = c.combine_predictions()
     print(res)
