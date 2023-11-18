@@ -1,6 +1,5 @@
 import datetime
 import logging
-import math
 import os
 import shutil
 import subprocess
@@ -19,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 SYMBOL_MASTER = "https://api.shoonya.com/NSE_symbols.txt.zip"
 SCRIP_MAP = {'BAJAJ_AUTO-EQ': 'BAJAJ-AUTO-EQ', 'M_M-EQ': 'M&M-EQ'}
+TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
 PRED_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Pred.csv')
 ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
 ACCURACY_COLS = ["scrip", "strategy", "entry_pct", "l_pct_success", "l_pct", "s_pct_success", "s_pct"]
@@ -98,12 +98,12 @@ class Combiner:
         """
         if len(df) == 0:
             return pd.DataFrame()
-        df['weight'] = df.apply(calc_weight, axis=1)
-        df['pct_weight'] = (df['weight'] / df['weight'].sum()) * 100
-        df['alloc'] = df['pct_weight'].mul(capital / 100)
-        df["type"] = "Fixed"
-        df["risk"] = 0
-        df["quantity"] = df.apply(lambda row: math.floor(row.alloc / row.close), axis=1)
+        df = df.assign(weight=calc_weight)
+        df = df.assign(pct_weight=(df['weight'] / df['weight'].sum()) * 100)
+        df = df.assign(alloc=df['pct_weight'].mul(capital / 100))
+        df = df.assign(type="Fixed", risk=0, quantity=lambda row: (row.alloc / row.close))
+        df = df.assign(quantity=round(df.quantity, 0))
+        df['quantity'] = df['quantity'].astype(int)
         return df
 
     @staticmethod
@@ -182,9 +182,11 @@ class Combiner:
         """
         return self.pred.loc[(self.pred.pct_ret > min_pct_ret) & (self.pred.pct_success > min_pct_success)]
 
-    def __get_pred_with_accuracy(self):
-        pred = pd.read_csv(PRED_FILE)
-        accuracy = pd.read_csv(ACCURACY_FILE)
+    def __get_pred_with_accuracy(self, pred=pd.read_csv(PRED_FILE), accuracy=pd.read_csv(ACCURACY_FILE)):
+        # if pred is None:
+        #     pred = pd.read_csv(PRED_FILE)
+        # if accuracy is None:
+        #     accuracy = pd.read_csv(ACCURACY_FILE)
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
                       right_on=["scrip", "strategy"])
         df["pct_success"] = df.apply(lambda row: row['l_pct_success'] if row['signal'] == 1 else row['s_pct_success'],
@@ -193,8 +195,44 @@ class Combiner:
         df.drop(columns=['l_pct_success', 'l_pct', 's_pct_success', 's_pct'], axis=1, inplace=True)
         self.pred = df
 
+    def weighted_backtest(self):
+        """
+        1. Read portfolio accuracy & trades
+        2. Filter for % success & % return thresholds
+        3. For trade day:
+            a. Get weights
+            b. Get quantities
+            c. Plug in quantities to filtered trades
+        4. Get Acct BT Results
+        :return:
+        """
+        trades = pd.read_csv(TRADES_FILE)
+        trades.rename(columns={"strategy": "model", "open": "close"}, inplace=True)
+        # accuracy = pd.read_csv(ACCURACY_FILE)
+        self.__get_pred_with_accuracy(pred=trades)
+        for acct in cfg['steps']['accounts']:
+            acct_trades = pd.DataFrame()
+            key = acct['name']
+            cap = acct['capital']
+            threshold = acct.get('threshold', cfg['steps']['threshold'])
+            filter_trades = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
+            for trade_dt in filter_trades.date.unique():
+                val = self.__get_quantity(filter_trades.loc[filter_trades.date == trade_dt], cap)
+                val = val.loc[val.quantity > 0]
+                val.drop(columns=['model', 'trade_enabled', 'qty', 'margin', 'entry_pct', 'pct_success',
+                                  'is_valid', 'pct_ret', 'weight', 'pct_weight', 'alloc', 'type', 'risk', ],
+                         inplace=True)
+                val['margin'] = val['entry_price'] * val['quantity']
+                val['pnl'] = val['final_pnl'] * val['quantity']
+                acct_trades = pd.concat([acct_trades, val])
+            acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
+            acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'), float_format='%.2f',
+                               index=False)
+        return "Done"
+
 
 if __name__ == "__main__":
     c = Combiner()
-    res = c.combine_predictions()
+    # res = c.combine_predictions()
+    res = c.weighted_backtest()
     print(res)

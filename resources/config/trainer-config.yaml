@@ -8,6 +8,7 @@ steps:
 #    - run-analysis
 #    - run-ranking
 #    - run-accuracy
+#    - run-weighted-bt
 #    - load-results
   analysis:
 #    mode: goal-seek

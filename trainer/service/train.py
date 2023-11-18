@@ -348,6 +348,11 @@ class ModelTrainer:
         if "run-accuracy" in opts:
             run_accuracy()
 
+        if "run-weighted-bt" in opts:
+            c = Combiner()
+            res = c.weighted_backtest()
+            logger.info(f"Combiner Results: {res}")
+
         return ra_data
 
 
@@ -362,5 +367,5 @@ if __name__ == "__main__":
     # l_opts.append('run-backtest')
     # l_opts.append('run-accuracy')
     # l_opts.append('run-next-close')
-    res = mt.run_pipeline(opts=l_opts, params=None)
+    res_ = mt.run_pipeline(opts=l_opts, params=None)
     logger.info("Finished steps")
