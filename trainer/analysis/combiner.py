@@ -184,11 +184,11 @@ class Combiner:
         """
         return self.pred.loc[(self.pred.pct_ret > min_pct_ret) & (self.pred.pct_success > min_pct_success)]
 
-    def __get_pred_with_accuracy(self, pred=pd.read_csv(PRED_FILE), accuracy=pd.read_csv(ACCURACY_FILE)):
-        # if pred is None:
-        #     pred = pd.read_csv(PRED_FILE)
-        # if accuracy is None:
-        #     accuracy = pd.read_csv(ACCURACY_FILE)
+    def __get_pred_with_accuracy(self, pred: pd.DataFrame = None, accuracy: pd.DataFrame = None):
+        if pred is None:
+            pred = pd.read_csv(PRED_FILE)
+        if accuracy is None:
+            accuracy = pd.read_csv(ACCURACY_FILE)
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
                       right_on=["scrip", "strategy"])
         df["pct_success"] = df.apply(lambda row: row['l_pct_success'] if row['signal'] == 1 else row['s_pct_success'],

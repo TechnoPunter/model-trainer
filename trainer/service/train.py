@@ -83,7 +83,7 @@ class ModelTrainer:
             strat_name = strategy.__name__
             try:
                 data['scrip'] = scrip_name
-                result_df = strategy.get_predictions(data, mode)
+                result_df = strategy.get_predictions(data, mode, scrip_name)
                 result_df['signal'] = result_df['signal'].astype(int)
             except Exception as ex:
                 print(f"Error with {strategy.__name__} ex: {ex}")

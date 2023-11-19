@@ -19,10 +19,6 @@ def get_target_pnl(row):
         return abs(row['open'] - row['target'])
 
 
-def get_final_pnl(row):
-    return row['target_pnl'] * row['qty']
-
-
 def get_eod_pnl(row):
     if row['target_pnl'] != 0:
         return row['target_pnl']
@@ -55,80 +51,59 @@ def calc_mtm(row):
         return row['entry_price'] - row['low']
 
 
-def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
-    l_trade = False
-    s_trade = False
-    l_qty = 1
-    s_qty = 1
-    for param in trade_exec_params:
-        if param.get('models')[0].get('name').split('.')[2] == strategy:
-            if param.get('models')[0].get('direction') == 'BUY':
-                l_trade = True
-            elif param.get('models')[0].get('direction') == 'SELL':
-                s_trade = True
+def get_accuracy(strategy: str, scrip: str):
+    merged_df, count = prep_data(scrip, strategy)
 
-    file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
-    results = pd.read_csv(file)
-
-    results = results[['target', 'signal', 'time']]
-    results['time'] = results['time'].shift(-1)
-    results['date'] = pd.to_datetime(results['time'], unit='s', utc=True)
-    results['date'] = results['date'].dt.tz_convert(IST)
-    results['date'] = results['date'].dt.date
-    # Remove last row after offset of time
-    results.dropna(subset=['date'], inplace=True)
-    count = len(results)
-
-    tick_data = get_tick_data(scrip)
-    base_data = get_base_data(scrip)
-    base_data = base_data[['time', 'close']]
-    base_data.rename(columns={"close": "day_close"}, inplace=True)
-    merged_df = pd.merge(tick_data, results, how='left', left_on='time', right_on='time')
-    merged_df['datetime'] = pd.to_datetime(merged_df['time'], unit='s', utc=True)
-    merged_df['datetime'] = merged_df['datetime'].dt.tz_convert(IST)
-    merged_df['date'] = merged_df['datetime'].dt.date
-    merged_df.set_index('datetime', inplace=True)
-    merged_df = pd.merge(merged_df, base_data, how='left', left_on='time', right_on='time')
-
-    # Remove 1st Row since we don't have closing from T-1
-    merged_df = merged_df.iloc[1:]
-
+    # Is the target still available at open i.e. 9:15 candle?
     merged_df['is_valid'] = merged_df.apply(is_valid, axis=1)
-    merged_df['entry_price'] = merged_df['open'][merged_df['is_valid']]
-    merged_df['entry_price'] = merged_df['entry_price'].ffill()
 
-    # Check if signal is valid i.e. Direction has travel at SOD
+    # If Yes - use that as entry price for the entire day
+    merged_df['entry_price'] = merged_df['open'][merged_df['is_valid']]
+
+    # Identify valid days
     valid_df = merged_df.loc[merged_df.is_valid]
     valid_df.set_index('date', inplace=True)
-
-    # Remove invalid day rows
     merged_df = merged_df[merged_df.date.isin(valid_df.index)]
 
+    # Fill the data for the day
+    merged_df['entry_price'] = merged_df['entry_price'].ffill()
     merged_df['curr_target'] = merged_df['target'].ffill()
     merged_df['curr_signal'] = merged_df['signal'].ffill()
 
-    merged_df['mtm'] = merged_df.apply(calc_mtm, axis=1)
+    # Check for signals & events i.e.
+    # Target Met - 1st row
+    # SL Hit
+    # Max Profit : MTM + Max
+    # Max Loss
+
     merged_df['target_met'] = merged_df.apply(target_met, axis=1)
-
-    target_met_df = merged_df[merged_df['target_met']].groupby('date').apply(lambda x: x['target_met'].idxmin())
-    mtm_max_df = merged_df.groupby('date').apply(lambda x: x['mtm'].max())
-
+    target_met_df = merged_df[merged_df['target_met']].groupby('date').apply(lambda r: r['target_met'].idxmin())
     final_df = pd.merge(valid_df, pd.DataFrame(target_met_df), how='left', left_index=True, right_index=True)
     final_df.rename({0: 'target_candle'}, axis=1, inplace=True)
+
+    merged_df['mtm'] = merged_df.apply(calc_mtm, axis=1)
+    mtm_max_df = merged_df.groupby('date').apply(lambda r: r['mtm'].max())
     final_df = pd.merge(final_df, pd.DataFrame(mtm_max_df), how='left', left_index=True, right_index=True)
     final_df.rename({0: 'max_mtm'}, axis=1, inplace=True)
 
+    # Calc PNL
+    # Target PNL
+    # EOD PNL - Could be P or L
     final_df['target_pnl'] = final_df.apply(get_target_pnl, axis=1)
     final_df['target_pnl'] = final_df.apply(get_eod_pnl, axis=1)
+
+    # Prep to write to CSV
     final_df['strategy'] = MODEL_PREFIX + strategy
-    final_df = final_df.assign(trade_enabled=False)
-    final_df.loc[final_df.signal == 1, 'trade_enabled'] = l_trade
-    final_df.loc[final_df.signal == 1, 'qty'] = l_qty
-    final_df.loc[final_df.signal == -1, 'trade_enabled'] = s_trade
-    final_df.loc[final_df.signal == -1, 'qty'] = s_qty
-    final_df['final_pnl'] = final_df.apply(get_final_pnl, axis=1)
-    final_df = final_df.assign(margin=lambda r: r.open * r.qty)
     final_df.drop(columns=['high', 'low', 'close'], axis=1, inplace=True)
+
+    cols = ["open", "day_close", "target", "entry_price", "max_mtm", "target_pnl"]
+    final_df[cols] = final_df[cols].astype(float).apply(lambda x: np.round(x, decimals=2))
+    final_df.to_csv(os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades.csv'))
+
+    return calc_stats(final_df, count, scrip, strategy)
+
+
+def calc_stats(final_df, count, scrip, strategy):
 
     l_trades = 0
     l_pct_success = 0
@@ -138,10 +113,9 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
     s_pct_success = 0
     s_pnl = 0
     s_avg_cost = 0.01
-
     if len(final_df) > 0:
         pct_success = (final_df['target_candle'].notna().sum() / len(final_df)) * 100
-        tot_pnl = final_df['final_pnl'].sum()
+        tot_pnl = final_df['target_pnl'].sum()
         print(f"For {scrip} using {strategy}: No. of trades: {len(final_df)} "
               f"with {format(pct_success, '.2f')}% Accuracy "
               f"& PNL {format(tot_pnl, '.2f')}")
@@ -149,30 +123,56 @@ def get_accuracy(strategy: str, scrip: str, trade_exec_params: list):
         if len(l_trades) > 0:
             l_pct_success = (l_trades['target_candle'].notna().sum() / len(l_trades)) * 100
             l_avg_cost = l_trades['entry_price'].mean()
-            l_pnl = l_trades['final_pnl'].sum()
+            l_pnl = l_trades['target_pnl'].sum()
             print(f"For {scrip} using {strategy}: Long: No. of trades: {len(l_trades)} "
                   f"with {format(l_pct_success, '.2f')}% Accuracy "
                   f"& PNL {format(l_pnl, '.2f')}")
         s_trades = final_df.loc[final_df.signal == -1]
         if len(s_trades) > 0:
             s_pct_success = (s_trades['target_candle'].notna().sum() / len(s_trades)) * 100
-            s_pnl = s_trades['final_pnl'].sum()
+            s_pnl = s_trades['target_pnl'].sum()
             s_avg_cost = s_trades['entry_price'].mean()
             print(f"For {scrip} using {strategy}: Short: No. of trades: {len(s_trades)} "
                   f"with {format(s_pct_success, '.2f')}% Accuracy "
                   f"& PNL {format(s_pnl, '.2f')}")
-        cols = ["open", "day_close", "target", "entry_price", "max_mtm", "target_pnl", "final_pnl"]
-        final_df[cols] = final_df[cols].astype(float).apply(lambda x: np.round(x, decimals=2))
-        final_df.to_csv(os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades.csv'))
-
     return {
         "scrip": scrip, "strategy": MODEL_PREFIX + strategy,
         "trades": len(final_df), "entry_pct": len(final_df) * 100 / count,
         "l_trades": len(l_trades), "l_pct_success": l_pct_success, "l_pnl": l_pnl, "l_avg_cost": l_avg_cost,
-        "l_pct": l_pnl * 100 / l_avg_cost,
+        "l_pct": l_pnl * 100 / l_avg_cost, "l_entry_pct": len(l_trades) * 100 / count,
         "s_trades": len(s_trades), "s_pct_success": s_pct_success, "s_pnl": s_pnl, "s_avg_cost": s_avg_cost,
-        "s_pct": s_pnl * 100 / s_avg_cost
+        "s_pct": s_pnl * 100 / s_avg_cost, "s_entry_pct": len(s_trades) * 100 / count
     }
+
+
+def prep_data(scrip, strategy):
+    # Read the results file & shift timestamp by 1 row (since model uses Friday's TS to predict Monday's close)
+    file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
+    results = pd.read_csv(file)
+    results = results[['target', 'signal', 'time']]
+    results['time'] = results['time'].shift(-1)
+    results['date'] = pd.to_datetime(results['time'], unit='s', utc=True)
+    results['date'] = results['date'].dt.tz_convert(IST)
+    results['date'] = results['date'].dt.date
+    # Remove last row after offset of time
+    results.dropna(subset=['date'], inplace=True)
+
+    # Get 1-Min data (tick data) and join with results
+    tick_data = get_tick_data(scrip)
+    merged_df = pd.merge(tick_data, results, how='left', left_on='time', right_on='time')
+    merged_df['datetime'] = pd.to_datetime(merged_df['time'], unit='s', utc=True)
+    merged_df['datetime'] = merged_df['datetime'].dt.tz_convert(IST)
+    merged_df['date'] = merged_df['datetime'].dt.date
+    merged_df.set_index('datetime', inplace=True)
+
+    # Get the Daily data (base data) and join with merged DF this is to get the closing price for the day
+    base_data = get_base_data(scrip)
+    base_data = base_data[['time', 'close']]
+    base_data.rename(columns={"close": "day_close"}, inplace=True)
+    merged_df = pd.merge(merged_df, base_data, how='left', left_on='time', right_on='time')
+    # Remove 1st Row since we don't have closing from T-1
+    merged_df = merged_df.iloc[1:]
+    return merged_df, len(results)
 
 
 def combine_results(scrip: str):
@@ -191,14 +191,9 @@ def combine_results(scrip: str):
 def run_accuracy():
     res = []
     scrip_trades = []
-    params = cfg['trade-exec-params']['scrips']
     for scrip in cfg['steps']['scrips']:
-        trade_params = []
-        for trade_param in params:
-            if trade_param.get('scripName') == scrip:
-                trade_params.append(trade_param)
         for strategy in cfg['steps']['strats']:
-            res.append(get_accuracy(strategy=strategy, scrip=scrip, trade_exec_params=trade_params))
+            res.append(get_accuracy(strategy=strategy, scrip=scrip))
         scrip_trades.append(combine_results(scrip))
     result = pd.DataFrame(res)
     result_trades = pd.concat(scrip_trades)
