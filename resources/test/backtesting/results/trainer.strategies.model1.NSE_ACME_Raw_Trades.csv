@@ -1,0 +1,17 @@
+date,time,open,target,signal,day_close,is_valid,entry_price,target_candle,max_mtm,target_pnl,strategy
+2023-10-23,1698032700,199.0,198.0,-1.0,198.0,True,199.0,6.0,2.0,1.0,trainer.strategies.model1
+2023-10-25,1698205500,201.0,202.0,1.0,202.0,True,201.0,9.0,2.0,1.0,trainer.strategies.model1
+2023-10-30,1698637500,200.0,199.0,-1.0,200.0,True,200.0,22.0,3.0,1.0,trainer.strategies.model1
+2023-10-31,1698723900,200.0,201.0,1.0,199.0,True,200.0,25.0,3.0,1.0,trainer.strategies.model1
+2023-11-01,1698810300,200.0,197.0,-1.0,199.0,True,200.0,,2.0,1.0,trainer.strategies.model1
+2023-11-02,1698896700,200.0,203.0,1.0,201.0,True,200.0,,2.0,1.0,trainer.strategies.model1
+2023-11-03,1698983100,200.0,198.0,-1.0,201.0,True,200.0,,1.0,-1.0,trainer.strategies.model1
+2023-11-06,1699242300,200.0,202.0,1.0,199.0,True,200.0,,1.0,-1.0,trainer.strategies.model1
+2023-11-07,1699328700,200.0,199.5,-1.0,202.0,True,200.0,44.0,0.5,0.5,trainer.strategies.model1
+2023-11-08,1699415100,200.0,200.5,1.0,198.0,True,200.0,48.0,0.5,0.5,trainer.strategies.model1
+2023-11-09,1699501500,200.0,198.0,-1.0,201.0,True,200.0,54.0,3.0,2.0,trainer.strategies.model1
+2023-11-10,1699587900,200.0,202.0,1.0,199.0,True,200.0,58.0,3.0,2.0,trainer.strategies.model1
+2023-11-12,1699793100,200.0,199.0,-1.0,199.0,True,200.0,61.0,2.0,1.0,trainer.strategies.model1
+2023-11-13,1699847100,200.0,201.0,1.0,201.0,True,200.0,65.0,2.0,1.0,trainer.strategies.model1
+2023-11-15,1700019900,200.0,199.0,-1.0,199.0,True,200.0,68.0,2.0,1.0,trainer.strategies.model1
+2023-11-16,1700106300,200.0,201.0,1.0,201.0,True,200.0,72.0,2.0,1.0,trainer.strategies.model1

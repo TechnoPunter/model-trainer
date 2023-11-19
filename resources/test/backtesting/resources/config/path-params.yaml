@@ -1,0 +1,4 @@
+base-data-dir-path:
+  - /Users/pralhad/Documents/99-src/98-trading/model-trainer/resources/test/backtesting/tv-data/base-data/
+low-tf-data-dir-path:
+  - /Users/pralhad/Documents/99-src/98-trading/model-trainer/resources/test/backtesting/tv-data/low-tf-data/
