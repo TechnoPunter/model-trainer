@@ -12,7 +12,7 @@ TEST_STRATEGY = "model1"
 TEST_SCRIP = "NSE_ACME"
 
 
-class TestApiLogin(unittest.TestCase):
+class TestBackTests(unittest.TestCase):
 
     def test_get_accuracy(self):
         accuracy_resp = get_accuracy(strategy=TEST_STRATEGY, scrip=TEST_SCRIP)
