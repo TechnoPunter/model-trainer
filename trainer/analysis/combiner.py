@@ -26,7 +26,11 @@ MODEL_PREFIX = 'trainer.strategies.'
 
 
 def calc_weight(row):
-    return row['entry_pct'] * row['pct_success'] * row['pct_ret']
+    weights = cfg.get('steps').get('weights', {"entry_pct": 1, "pct_success": 1, "pct_ret": 1})
+    wt_entry_pct = weights['entry_pct']
+    wt_pct_success = weights['pct_success']
+    wt_pct_ret = weights['pct_ret']
+    return wt_entry_pct * row['entry_pct'] * wt_pct_success * row['pct_success'] * wt_pct_ret * row['pct_ret']
 
 
 class Combiner:
@@ -221,11 +225,10 @@ class Combiner:
             for trade_dt in filter_trades.date.unique():
                 val = self.__get_quantity(filter_trades.loc[filter_trades.date == trade_dt], cap)
                 val = val.loc[val.quantity > 0]
-                val.drop(columns=['model', 'trade_enabled', 'qty', 'margin', 'entry_pct', 'pct_success',
-                                  'is_valid', 'pct_ret', 'weight', 'pct_weight', 'alloc', 'type', 'risk', ],
-                         inplace=True)
+                val.drop(columns=['model', 'entry_pct', 'pct_success', 'is_valid', 'pct_ret', 'weight', 'pct_weight',
+                                  'alloc', 'type', 'risk', ], inplace=True)
                 val['margin'] = val['entry_price'] * val['quantity']
-                val['pnl'] = val['final_pnl'] * val['quantity']
+                val['pnl'] = val['target_pnl'] * val['quantity']
                 acct_trades = pd.concat([acct_trades, val])
             acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
             acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'), float_format='%.2f',
@@ -235,6 +238,6 @@ class Combiner:
 
 if __name__ == "__main__":
     c = Combiner()
-    # res = c.combine_predictions()
-    res = c.weighted_backtest()
+    res = c.combine_predictions()
+    # res = c.weighted_backtest()
     print(res)

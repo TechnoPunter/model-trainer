@@ -86,6 +86,10 @@ steps:
   threshold:
     min_pct_ret: 1
     min_pct_success: 60
+  weights:
+    entry_pct: 1
+    pct_success: 1
+    pct_ret: 1
   accounts:
     - name: Trader-V2-Alan
       capital: 1000000
