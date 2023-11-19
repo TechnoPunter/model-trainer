@@ -1,0 +1,20 @@
+[
+  {
+    "scrip": "NSE_ACME",
+    "strategy": "trainer.strategies.model1",
+    "trades": 16,
+    "entry_pct": 88.88888888888889,
+    "l_trades": 8,
+    "l_pct_success": 75.0000000001,
+    "l_pnl": 6.5,
+    "l_avg_cost": 200.125,
+    "l_pct": 3.2479700187382887,
+    "l_entry_pct": 44.44444444444444,
+    "s_trades": 8,
+    "s_pct_success": 75.0000000001,
+    "s_pnl": 6.5,
+    "s_avg_cost": 199.875,
+    "s_pct": 3.252032520325203,
+    "s_entry_pct": 44.44444444444444
+  }
+]
