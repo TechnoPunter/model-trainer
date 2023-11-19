@@ -233,6 +233,8 @@ class Combiner:
             acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
             acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'), float_format='%.2f',
                                index=False)
+            grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date']).sum(['pnl'])
+            print(grouped['pnl'].sum())
         return "Done"
 
 
