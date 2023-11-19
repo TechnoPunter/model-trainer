@@ -21,7 +21,7 @@ SCRIP_MAP = {'BAJAJ_AUTO-EQ': 'BAJAJ-AUTO-EQ', 'M_M-EQ': 'M&M-EQ'}
 TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
 PRED_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Pred.csv')
 ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
-ACCURACY_COLS = ["scrip", "strategy", "entry_pct", "l_pct_success", "l_pct", "s_pct_success", "s_pct"]
+ACCURACY_COLS = ["scrip", "strategy", "l_entry_pct", "l_pct_success", "l_pct", "s_entry_pct", "s_pct_success", "s_pct"]
 MODEL_PREFIX = 'trainer.strategies.'
 
 
@@ -197,6 +197,8 @@ class Combiner:
                       right_on=["scrip", "strategy"])
         df["pct_success"] = df.apply(lambda row: row['l_pct_success'] if row['signal'] == 1 else row['s_pct_success'],
                                      axis=1)
+        df["entry_pct"] = df.apply(lambda row: row['l_entry_pct'] if row['signal'] == 1 else row['s_entry_pct'],
+                                   axis=1)
         df["pct_ret"] = df.apply(lambda row: row['l_pct'] if row['signal'] == 1 else row['s_pct'], axis=1)
         df.drop(columns=['l_pct_success', 'l_pct', 's_pct_success', 's_pct'], axis=1, inplace=True)
         self.pred = df
