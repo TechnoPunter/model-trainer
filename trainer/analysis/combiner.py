@@ -85,7 +85,7 @@ class Combiner:
         return self.thresholds.get(key)
 
     @staticmethod
-    def __get_quantity(df: pd.DataFrame, capital: float, cap_loading: float = None):
+    def __get_quantity(df: pd.DataFrame, capital: float, cap_loading: float = 1.0):
         """
 
         Args:
