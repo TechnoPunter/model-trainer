@@ -90,6 +90,7 @@ steps:
     entry_pct: 1
     pct_success: 1
     pct_ret: 1
+    cap_loading: 1.2
   accounts:
     - name: Trader-V2-Alan
       capital: 1000000
@@ -108,6 +109,7 @@ steps:
         min_pct_success: 60
     - name: Trader-V2-Mahi
       capital: 10000
+      cap_loading: 1.0
       threshold:
         min_pct_ret: 1
         min_pct_success: 85

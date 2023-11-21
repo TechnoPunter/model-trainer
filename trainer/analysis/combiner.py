@@ -85,7 +85,7 @@ class Combiner:
         return self.thresholds.get(key)
 
     @staticmethod
-    def __get_quantity(df: pd.DataFrame, capital: float):
+    def __get_quantity(df: pd.DataFrame, capital: float, cap_loading: float = None):
         """
 
         Args:
@@ -104,9 +104,14 @@ class Combiner:
         """
         if len(df) == 0:
             return pd.DataFrame()
+
+        if cap_loading is None:
+            weights = cfg.get('steps').get('weights', {"cap_loading": 1.2})
+            cap_loading = weights['cap_loading']
+        eff_capital = capital * cap_loading
         df = df.assign(weight=calc_weight)
         df = df.assign(pct_weight=(df['weight'] / df['weight'].sum()) * 100)
-        df = df.assign(alloc=df['pct_weight'].mul(capital / 100))
+        df = df.assign(alloc=df['pct_weight'].mul(eff_capital / 100))
         df = df.assign(type="Fixed", risk=0, quantity=lambda row: (row.alloc / row.close))
         df = df.assign(quantity=round(df.quantity, 0))
         df['quantity'] = df['quantity'].astype(int)
@@ -161,9 +166,10 @@ class Combiner:
         for acct in cfg['steps']['accounts']:
             key = acct['name']
             cap = acct['capital']
+            cap_loading = acct.get('cap_loading', None)
             threshold = acct.get('threshold', cfg['steps']['threshold'])
             filter_pred = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
-            val = self.__get_quantity(filter_pred, cap)
+            val = self.__get_quantity(filter_pred, cap, cap_loading)
             val = val.loc[val.quantity > 0]
             val.drop(columns=["strategy", "entry_pct", "pct_success", "pct_ret", "weight", "pct_weight", "alloc"],
                      axis=1, inplace=True)
@@ -246,6 +252,7 @@ class Combiner:
             acct_trades = pd.DataFrame()
             key = acct['name']
             cap = acct['capital']
+            cap_loading = acct.get('cap_loading', None)
             threshold = acct.get('threshold', cfg['steps']['threshold'])
             # Remove predictions not meeting threshold
             filter_pred_df = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
@@ -253,7 +260,7 @@ class Combiner:
             # Iterate through Trade Dates from filtered Predictions
             for trade_dt in filter_pred_df.date.unique():
                 # Get Quantities
-                qty_df = self.__get_quantity(filter_pred_df.loc[filter_pred_df.date == trade_dt], cap)
+                qty_df = self.__get_quantity(filter_pred_df.loc[filter_pred_df.date == trade_dt], cap, cap_loading)
                 curr_trades = trades.loc[trades.date == trade_dt]
 
                 # Combine with trades
@@ -273,15 +280,17 @@ class Combiner:
             grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date'])
             pnl = grouped['pnl'].sum()
             margin = grouped['margin'].sum()
+            peak_margin = margin.loc[margin > cap]
             print(
-                f"Account:{acct};\nResults:\nPNL: {format(pnl.sum(), '.2f')} "
+                f"Account:{acct};\nResults: PNL: {format(pnl.sum(), '.2f')} "
                 f"Margin: {format(margin.mean(), '.2f')} "
-                f"Peak Margin: {format(margin.max(), '.2f')}")
+                f"Max Margin: {format(margin.max(), '.2f')}\n"
+                f"Peak Margin:\n{peak_margin}")
         return "Done"
 
 
 if __name__ == "__main__":
     c = Combiner()
-    # res = c.combine_predictions()
-    res = c.weighted_backtest()
-    print(res)
+    res1 = c.combine_predictions()
+    print("Done - Combine")
+    res2 = c.weighted_backtest()
