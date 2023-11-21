@@ -106,7 +106,7 @@ class Combiner:
             return pd.DataFrame()
 
         if cap_loading is None:
-            weights = cfg.get('steps').get('weights', {"cap_loading": 1.2})
+            weights = cfg.get('steps').get('weights', {"cap_loading": 1.0})
             cap_loading = weights['cap_loading']
         eff_capital = capital * cap_loading
         df = df.assign(weight=calc_weight)
