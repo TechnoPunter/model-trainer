@@ -8,6 +8,7 @@ from urllib.request import urlopen
 import numpy as np
 import pandas as pd
 from commons.config.reader import cfg
+from commons.consts.consts import IST
 from commons.dataprovider.database import DatabaseEngine
 from commons.dataprovider.filereader import get_base_data
 from commons.models import SlThresholds
@@ -22,6 +23,7 @@ TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
 PRED_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Pred.csv')
 ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
 ACCURACY_COLS = ["scrip", "strategy", "l_entry_pct", "l_pct_success", "l_pct", "s_entry_pct", "s_pct_success", "s_pct"]
+QUANTITY_COLS = ["scrip", "model", "date", "quantity"]
 MODEL_PREFIX = 'trainer.strategies.'
 
 
@@ -203,45 +205,83 @@ class Combiner:
         df.drop(columns=['l_pct_success', 'l_pct', 's_pct_success', 's_pct'], axis=1, inplace=True)
         self.pred = df
 
+    @staticmethod
+    def __prep_pred_data():
+        res = []
+        for scrip in cfg['steps']['scrips']:
+            for strategy in cfg['steps']['strats']:
+                file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
+                results = pd.read_csv(file)
+                results = results[['target', 'signal', 'time']]
+                results['time'] = results['time'].shift(-1)
+                results['date'] = pd.to_datetime(results['time'], unit='s', utc=True)
+                results['date'] = results['date'].dt.tz_convert(IST)
+                results['date'] = results['date'].dt.date
+                results['date'] = results['date'].astype(str)
+                # Remove last row after offset of time
+                results.dropna(subset=['date'], inplace=True)
+                results = results.assign(scrip=scrip)
+                results = results.assign(model=MODEL_PREFIX + strategy)
+                res.append(results)
+        return pd.concat(res)
+
     def weighted_backtest(self):
         """
-        1. Read portfolio accuracy & trades
+        1. Read portfolio accuracy & Raw Predictions
         2. Filter for % success & % return thresholds
         3. For trade day:
-            a. Get weights
+            a. Get weights from Predictions
             b. Get quantities
-            c. Plug in quantities to filtered trades
+            c. Plug in quantities to trades
         4. Get Acct BT Results
         :return:
         """
         trades = pd.read_csv(TRADES_FILE)
         trades.rename(columns={"strategy": "model", "open": "close"}, inplace=True)
-        # accuracy = pd.read_csv(ACCURACY_FILE)
-        self.__get_pred_with_accuracy(pred=trades)
+        raw_pred_df = self.__prep_pred_data()
+        raw_pred_df.rename(columns={"strategy": "model", "target": "close"}, inplace=True)
+        self.__get_pred_with_accuracy(pred=raw_pred_df)
+
         for acct in cfg['steps']['accounts']:
             acct_trades = pd.DataFrame()
             key = acct['name']
             cap = acct['capital']
             threshold = acct.get('threshold', cfg['steps']['threshold'])
-            filter_trades = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
-            for trade_dt in filter_trades.date.unique():
-                val = self.__get_quantity(filter_trades.loc[filter_trades.date == trade_dt], cap)
+            # Remove predictions not meeting threshold
+            filter_pred_df = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
+
+            # Iterate through Trade Dates from filtered Predictions
+            for trade_dt in filter_pred_df.date.unique():
+                # Get Quantities
+                qty_df = self.__get_quantity(filter_pred_df.loc[filter_pred_df.date == trade_dt], cap)
+                curr_trades = trades.loc[trades.date == trade_dt]
+
+                # Combine with trades
+                val = pd.merge(curr_trades, qty_df[QUANTITY_COLS], how="inner",
+                               left_on=["scrip", "model", "date"], right_on=["scrip", "model", "date"])
                 val = val.loc[val.quantity > 0]
-                val.drop(columns=['model', 'entry_pct', 'pct_success', 'is_valid', 'pct_ret', 'weight', 'pct_weight',
-                                  'alloc', 'type', 'risk', ], inplace=True)
                 val['margin'] = val['entry_price'] * val['quantity']
                 val['pnl'] = val['target_pnl'] * val['quantity']
+
+                # Append to results
                 acct_trades = pd.concat([acct_trades, val])
+
+            # Prepare & Dump results
             acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
             acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'), float_format='%.2f',
                                index=False)
-            grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date']).sum(['pnl'])
-            print(grouped['pnl'].sum())
+            grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date'])
+            pnl = grouped['pnl'].sum()
+            margin = grouped['margin'].sum()
+            print(
+                f"Account:{acct};\nResults:\nPNL: {format(pnl.sum(), '.2f')} "
+                f"Margin: {format(margin.mean(), '.2f')} "
+                f"Peak Margin: {format(margin.max(), '.2f')}")
         return "Done"
 
 
 if __name__ == "__main__":
     c = Combiner()
-    res = c.combine_predictions()
-    # res = c.weighted_backtest()
+    # res = c.combine_predictions()
+    res = c.weighted_backtest()
     print(res)
