@@ -7,8 +7,9 @@ from commons.config.reader import cfg
 from commons.consts.consts import IST
 from commons.dataprovider.filereader import get_tick_data, get_base_data
 
-ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
-TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
+SUMMARY_PATH = os.path.join(cfg['generated'], 'summary')
+ACCURACY_FILE = os.path.join(SUMMARY_PATH, 'Portfolio-Accuracy.csv')
+TRADES_FILE = os.path.join(SUMMARY_PATH, 'Portfolio-Trades.csv')
 MODEL_PREFIX = 'trainer.strategies.'
 
 
@@ -191,6 +192,8 @@ def combine_results(scrip: str):
 def run_accuracy():
     res = []
     scrip_trades = []
+    if not os.path.exists(SUMMARY_PATH):
+        os.makedirs(SUMMARY_PATH)
     for scrip in cfg['steps']['scrips']:
         for strategy in cfg['steps']['strats']:
             res.append(get_accuracy(strategy=strategy, scrip=scrip))
