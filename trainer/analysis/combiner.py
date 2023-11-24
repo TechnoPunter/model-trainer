@@ -35,6 +35,13 @@ def calc_weight(row):
     return wt_entry_pct * row['entry_pct'] * wt_pct_success * row['pct_success'] * wt_pct_ret * row['pct_ret']
 
 
+def get_direction_pct(row):
+    if row['signal'] == 1:
+        return row['l_pct_success'], row['l_entry_pct'], row['l_pct']
+    else:
+        return row['s_pct_success'], row['s_entry_pct'], row['s_pct']
+
+
 class Combiner:
     symbols = pd.DataFrame
     trader_db = DatabaseEngine
@@ -137,6 +144,18 @@ class Combiner:
             return None
 
     def combine_predictions(self):
+        """
+        1. For each scrip & strategy
+        2. Read the predictions from the Next Close file
+        3. Combine with SL Thresholds
+        4. Remove below threshold
+        5. For each account
+            a. Get Capital
+            b. Get Allocation percent --> todo: Use a sophisticated mechanism
+            c. Calculate Quantity
+            d. Create final Entries file
+        :return:
+        """
         dfs = []
         for scrip_name in cfg['steps']['scrips']:
             logger.info(f"Processing {scrip_name}")
@@ -203,12 +222,9 @@ class Combiner:
             accuracy = pd.read_csv(ACCURACY_FILE)
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
                       right_on=["scrip", "strategy"])
-        df["pct_success"] = df.apply(lambda row: row['l_pct_success'] if row['signal'] == 1 else row['s_pct_success'],
-                                     axis=1)
-        df["entry_pct"] = df.apply(lambda row: row['l_entry_pct'] if row['signal'] == 1 else row['s_entry_pct'],
-                                   axis=1)
-        df["pct_ret"] = df.apply(lambda row: row['l_pct'] if row['signal'] == 1 else row['s_pct'], axis=1)
-        df.drop(columns=['l_pct_success', 'l_pct', 's_pct_success', 's_pct'], axis=1, inplace=True)
+        df[["pct_success", "entry_pct", "pct_ret"]] = df.apply(get_direction_pct, axis=1, result_type='expand')
+        df.drop(columns=['l_entry_pct', 'l_pct_success', 'l_pct', 's_entry_pct', 's_pct_success', 's_pct'], axis=1,
+                inplace=True)
         self.pred = df
 
     @staticmethod
@@ -233,13 +249,14 @@ class Combiner:
 
     def weighted_backtest(self):
         """
-        1. Read portfolio accuracy & Raw Predictions
+        1. Read Portfolio Accuracy & Raw Predictions
         2. Filter for % success & % return thresholds
-        3. For trade day:
-            a. Get weights from Predictions
-            b. Get quantities
-            c. Plug in quantities to trades
-        4. Get Acct BT Results
+        3. For each day & account:
+            a. Filter for % success & % return thresholds
+            b. For the day's predictions - calculate weights & capital allocation
+            c. Calculate quantities based on capital allocation
+            d. Plug in quantities to trades [observe capital is idle since some trades are invalid at BOD]
+            e. Get Acct BT Results
         :return:
         """
         trades = pd.read_csv(TRADES_FILE)
@@ -290,6 +307,10 @@ class Combiner:
 
 
 if __name__ == "__main__":
+    from commons.loggers.setup_logger import setup_logging
+
+    setup_logging()
+
     c = Combiner()
     res1 = c.combine_predictions()
     print("Done - Combine")

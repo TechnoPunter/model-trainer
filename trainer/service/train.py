@@ -357,7 +357,9 @@ class ModelTrainer:
 
 
 if __name__ == "__main__":
-    import commons.loggers.setup_logger
+    from commons.loggers.setup_logger import setup_logging
+
+    setup_logging()
 
     logger.info("Started steps")
     mt = ModelTrainer()
