@@ -1,12 +1,10 @@
 import datetime
 import logging
 import os
-import shutil
-import subprocess
-from urllib.request import urlopen
 
 import numpy as np
 import pandas as pd
+from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
 from commons.consts.consts import IST
 from commons.dataprovider.database import DatabaseEngine
@@ -43,31 +41,25 @@ def get_direction_pct(row):
         return row['s_pct_success'], row['s_entry_pct'], row['s_pct']
 
 
-class Combiner:
-    symbols = pd.DataFrame
-    trader_db = DatabaseEngine
+ACCT = 'Trader-V2-Pralhad'
 
-    def __init__(self):
-        self.trader_db = DatabaseEngine()
+
+class Combiner:
+    symbols: pd.DataFrame
+    trader_db: DatabaseEngine
+    shoonya: Shoonya
+
+    def __init__(self, trader_db: DatabaseEngine = None, shoonya: Shoonya = None):
+        if trader_db is None:
+            self.trader_db = DatabaseEngine()
+        else:
+            self.trader_db = trader_db
+        if shoonya is None:
+            self.shoonya = Shoonya(ACCT)
+        else:
+            self.shoonya = shoonya
         self.thresholds = self.__get_sl_thresholds()
         self.pred = pd.DataFrame()
-        zip_file_name = 'NSE_symbols.zip'
-        token_file_name = 'NSE_symbols.txt'
-
-        # extracting zipfile from URL
-        with urlopen(SYMBOL_MASTER) as response, open(zip_file_name, 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
-
-            # extracting required file from zipfile
-            command = 'unzip -o ' + zip_file_name
-            subprocess.call(command, shell=True)
-
-        # deleting the zipfile from the directory
-        os.remove(zip_file_name)
-
-        # loading data from the file
-        self.symbols = pd.read_csv(token_file_name)
-        os.remove(token_file_name)
 
     def __get_sl_thresholds(self):
         """
@@ -80,11 +72,6 @@ class Combiner:
         for item in recs:
             result[":".join([item.scrip, str(item.direction), item.strategy])] = item
         return result
-
-    def __get_token(self, scrip):
-        logger.debug(f"Getting token for {scrip}")
-        scrip = SCRIP_MAP.get(scrip, scrip)
-        return self.symbols.loc[self.symbols.TradingSymbol == scrip]['Token'].iloc[0]
 
     def __get_threshold(self, df) -> SlThresholds:
         logger.debug(f"Getting threshold for\n{df}")
@@ -172,7 +159,7 @@ class Combiner:
                 curr_df = curr_df[['close', 'signal', 'target']]
                 curr_df[['scrip', 'model']] = [[scrip_name, model]]
                 curr_df[['exchange', 'symbol']] = [[exchange, symbol]]
-                curr_df['token'] = self.__get_token(symbol)
+                curr_df['token'] = self.shoonya.get_token(symbol)
                 threshold = self.__get_threshold(curr_df)
                 if threshold is not None:
                     curr_df[['target_pct', 'sl_pct', 'trail_sl_pct', 'tick']] = [
