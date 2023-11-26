@@ -60,7 +60,7 @@ steps:
     - NSE_KOTAKBANK
     - NSE_LTIM
     - NSE_LT
-    - NSE_M_M
+#    - NSE_M_M
     - NSE_MARUTI
     - NSE_NTPC
     - NSE_NESTLEIND
