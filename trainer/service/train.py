@@ -4,12 +4,13 @@ import os
 from multiprocessing import Pool
 
 import pandas as pd
+from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
 from commons.consts.consts import *
+from commons.dataprovider.ScripData import ScripData
 from commons.dataprovider.database import DatabaseEngine
-from commons.dataprovider.filereader import get_base_data, get_tick_data
-from commons.dataprovider.tvfeed import Interval
-from commons.dataprovider.tvfeed import TvDatafeed
+from commons.loggers.setup_logger import setup_logging
+from commons.service.ScripDataService import ScripDataService
 
 from trainer.analysis.accuracy import run_accuracy
 from trainer.analysis.combiner import Combiner
@@ -21,6 +22,8 @@ from trainer.utils.standard_prep import standard_prep
 
 logger = logging.getLogger(__name__)
 
+ACCT = 'Trader-V2-Pralhad'
+
 
 class ModelTrainer:
     cfg: dict
@@ -31,6 +34,9 @@ class ModelTrainer:
         self.trader_db = DatabaseEngine()
         self.threshold = self.__get_sl_threshold()
         self.threshold_range = self.__get_sl_threshold_range()
+        self.sd = ScripData(trader_db=self.trader_db)
+        self.s = Shoonya(ACCT)
+        self.sds = ScripDataService(shoonya=self.s, trader_db=self.trader_db)
 
     def __get_sl_threshold_range(self) -> dict:
         result = {}
@@ -107,7 +113,7 @@ class ModelTrainer:
         ra_list = {}
         range_list = []  # SL / Trail SL / Target range combination
         run_list = []  # Strategy / Range List combination
-        tick_df = get_tick_data(scrip_name)
+        tick_df = self.sd.get_tick_data(scrip_name)
         threshold = self.threshold_range.get(scrip_name.replace("NSE_", ""))
         mode = self.cfg['steps']["analysis"]["mode"]
         if mode == "goal-seek":
@@ -294,12 +300,7 @@ class ModelTrainer:
         strategies = self.get_strats_modules('../../', 'trainer.strategies')
 
         if "tv-download" in opts:
-            tv = TvDatafeed(self.cfg['trading-view']['username'], self.cfg['trading-view']['secret'])
-
-            tv.get_tv_data(symbols=self.cfg['steps']['scrips'], freq=Interval.in_daily,
-                           path=self.cfg['base-data-dir-path'], start=800)
-            tv.get_tv_data(symbols=self.cfg['steps']['scrips'], freq=Interval.in_1_minute,
-                           path=self.cfg['low-tf-data-dir-path'])
+            self.sds.load_scrips_data(scrip_names=self.cfg['steps']['scrips'])
 
         for scrip in self.cfg['steps']['scrips']:
 
@@ -320,7 +321,7 @@ class ModelTrainer:
                 os.makedirs(result_path)
 
             if "run-backtest" in opts or "run-next-close" in opts:
-                base_data = get_base_data(scrip)
+                base_data = self.sd.get_base_data(scrip)
 
                 filtered_data = get_filtered_df(df=base_data, cfg=self.cfg, type="train")
 
@@ -346,7 +347,7 @@ class ModelTrainer:
             rank_results()
 
         if "run-accuracy" in opts:
-            run_accuracy()
+            run_accuracy(self.trader_db)
 
         if "run-weighted-bt" in opts:
             c = Combiner()
@@ -357,9 +358,7 @@ class ModelTrainer:
 
 
 if __name__ == "__main__":
-    from commons.loggers.setup_logger import setup_logging
-
-    setup_logging()
+    setup_logging("train.log")
 
     logger.info("Started steps")
     mt = ModelTrainer()

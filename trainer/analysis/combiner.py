@@ -11,6 +11,7 @@ from commons.config.reader import cfg
 from commons.consts.consts import IST
 from commons.dataprovider.database import DatabaseEngine
 from commons.dataprovider.filereader import get_base_data
+from commons.loggers.setup_logger import setup_logging
 from commons.models import SlThresholds
 
 from trainer.utils.EmailAlert import send_email
@@ -147,8 +148,8 @@ class Combiner:
         """
         1. For each scrip & strategy
         2. Read the predictions from the Next Close file
-        3. Combine with SL Thresholds
-        4. Remove below threshold
+        3. Combine with SL & Accuracy Thresholds
+        4. Remove records below accuracy cutoff
         5. For each account
             a. Get Capital
             b. Get Allocation percent --> todo: Use a sophisticated mechanism
@@ -307,9 +308,7 @@ class Combiner:
 
 
 if __name__ == "__main__":
-    from commons.loggers.setup_logger import setup_logging
-
-    setup_logging()
+    setup_logging("combiner.log")
 
     c = Combiner()
     res1 = c.combine_predictions()
