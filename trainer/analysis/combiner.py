@@ -278,19 +278,20 @@ class Combiner:
                 # Append to results
                 acct_trades = pd.concat([acct_trades, val])
 
-            # Prepare & Dump results
-            acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
-            acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'), float_format='%.2f',
-                               index=False)
-            grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date'])
-            pnl = grouped['pnl'].sum()
-            margin = grouped['margin'].sum()
-            peak_margin = margin.loc[margin > cap]
-            print(
-                f"Account:{acct};\nResults: PNL: {format(pnl.sum(), '.2f')} "
-                f"Margin: {format(margin.mean(), '.2f')} "
-                f"Max Margin: {format(margin.max(), '.2f')}\n"
-                f"Peak Margin:\n{peak_margin}")
+            if len(acct_trades) > 0:
+                # Prepare & Dump results
+                acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
+                acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'),
+                                   float_format='%.2f', index=False)
+                grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date'])
+                pnl = grouped['pnl'].sum()
+                margin = grouped['margin'].sum()
+                peak_margin = margin.loc[margin > cap]
+                print(
+                    f"Account:{acct};\nResults: PNL: {format(pnl.sum(), '.2f')} "
+                    f"Margin: {format(margin.mean(), '.2f')} "
+                    f"Max Margin: {format(margin.max(), '.2f')}\n"
+                    f"Peak Margin:\n{peak_margin}")
         return "Done"
 
 

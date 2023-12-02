@@ -280,6 +280,23 @@ class ModelTrainer:
         # # Save the Excel file
         # writer.close()
 
+    def load_mtm(self):
+        """
+        Reads the TRADES_MTM_FILE file
+        Deletes & inserts MTM records into Trades_MTM table in Database
+        :param:
+        :return: None
+        """
+
+        df = pd.read_csv(TRADES_MTM_FILE)
+
+        if len(df) == 0:
+            logger.error("Empty Trades MTM File")
+            return
+        self.trader_db.delete_recs(table=TRADES_MTM_TABLE)
+        self.trader_db.bulk_insert(table=TRADES_MTM_TABLE, data=df)
+        logger.info(f"Added {len(df)} records into Trades MTM Table")
+
     def run_pipeline(self, opts=None, params: dict = None) -> [(str, pd.DataFrame)]:
         """
         0. Read base data
@@ -348,6 +365,9 @@ class ModelTrainer:
 
         if "run-accuracy" in opts:
             run_accuracy(self.trader_db)
+
+        if "load-trade-mtm" in opts:
+            self.load_mtm()
 
         if "run-weighted-bt" in opts:
             c = Combiner(trader_db=self.trader_db, shoonya=self.s)
