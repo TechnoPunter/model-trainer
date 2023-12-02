@@ -10,6 +10,7 @@ steps:
 #    - run-accuracy
 #    - run-weighted-bt
 #    - load-results
+#    - load-trade-mtm
   analysis:
 #    mode: goal-seek
     mode: calc
