@@ -346,9 +346,9 @@ class ModelTrainer:
             rank_results()
 
         if "run-accuracy" in opts:
-            run_accuracy(self.trader_db, load_trade_mtm="load-trade-mtm" in opts)
+            run_accuracy(self.trader_db)
 
-        if "run-accuracy" not in opts and "load-trade-mtm" in opts:
+        if "load-trade-mtm" in opts:
             load_mtm(self.trader_db)
 
         if "run-weighted-bt" in opts:
