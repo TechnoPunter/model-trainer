@@ -25,6 +25,7 @@ def run_accuracy(trader_db: DatabaseEngine, load_trade_mtm: bool = True):
     bt_trades.to_csv(TRADES_FILE, float_format='%.2f', index=False)
     for key, mtm_df in bt_mtm.items():
         if len(mtm_df) > 0:
+            logger.info(f"Processing {key}")
             scrip, strategy = key.split(":")
             file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades_MTM.csv')
             mtm_df.to_csv(file, float_format='%.2f', index=False)
@@ -33,7 +34,7 @@ def run_accuracy(trader_db: DatabaseEngine, load_trade_mtm: bool = True):
                              f"m.{TRADES_MTM_TABLE}.strategy == 'trainer.strategies.{strategy}'")
                 trader_db.delete_recs(table=TRADES_MTM_TABLE, predicate=predicate)
                 trader_db.bulk_insert(table=TRADES_MTM_TABLE, data=mtm_df)
-                logger.info(f"Added {len(mtm_df)} records into Trades MTM Table")
+                logger.info(f"Processing {key}: Added {len(mtm_df)} records into Trades MTM Table")
     return bt_stats
 
 
