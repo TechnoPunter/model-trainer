@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def run_accuracy(trader_db: DatabaseEngine):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
-    f = FastBT(trader_db=trader_db)
+    f = FastBT()
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
