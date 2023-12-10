@@ -7,3 +7,4 @@ include:
   - event-conditions
   - alert
   - trade-exec-params
+  - risk-params

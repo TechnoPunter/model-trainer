@@ -1,0 +1,33 @@
+risk-params:
+  accounts:
+    - Trader-V2-Alan
+    - Trader-V2-Pralhad
+    - Trader-V2-Sundar
+    - Trader-V2-Mahi
+  defaults:
+    reward_factor: 0.0
+    risk_reward_ratio: 0.8
+    trail_sl_factor: 0.5
+  scrips:
+    - scripName: NSE_APOLLOHOSP
+      models:
+        - name: trainer.strategies.gspcV2
+          signal: 1
+          reward_factor: 0.0
+          risk_reward_ratio: 0.8
+          trail_sl_factor: 0.5
+          accounts:
+            - name: Trader-V2-Mahi
+              reward_factor: 0.0
+              risk_reward_ratio: 0.8
+              trail_sl_factor: 0.5
+        - name: trainer.strategies.gspcV2
+          signal: -1
+          reward_factor: 0.0
+          risk_reward_ratio: 0.8
+          trail_sl_factor: 0.5
+          accounts:
+            - name: Trader-V2-Mahi
+              reward_factor: 0.0
+              risk_reward_ratio: 0.8
+              trail_sl_factor: 0.5
