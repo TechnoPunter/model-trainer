@@ -2,15 +2,12 @@ import datetime
 import logging
 import os
 
-import numpy as np
 import pandas as pd
 from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
 from commons.consts.consts import IST
-from commons.dataprovider.database import DatabaseEngine
 from commons.dataprovider.filereader import get_base_data
 from commons.loggers.setup_logger import setup_logging
-from commons.models import SlThresholds
 
 from trainer.utils.EmailAlert import send_email
 
@@ -73,6 +70,7 @@ class Combiner:
         Returns:
             {"quantity": quantity}
         """
+        logger.info("Entered __get_quantity")
         if len(df) == 0:
             return pd.DataFrame()
 
@@ -86,6 +84,7 @@ class Combiner:
         df = df.assign(type="Fixed", risk=0, quantity=lambda row: (row.alloc / row.close))
         df = df.assign(quantity=round(df.quantity, 0))
         df['quantity'] = df['quantity'].astype(int)
+        logger.info(f"Return __get_quantity:\n{df}")
         return df
 
     @staticmethod
@@ -120,6 +119,7 @@ class Combiner:
             d. Create final Entries file
         :return:
         """
+        logger.info("About to start combine_predictions")
         dfs = []
         for scrip_name in cfg['steps']['scrips']:
             logger.info(f"Processing {scrip_name}")
@@ -127,8 +127,9 @@ class Combiner:
                 model = MODEL_PREFIX + key
                 exchange = scrip_name.split("_")[0]
                 symbol = scrip_name.replace(exchange + "_", "") + "-EQ"
-                file = os.path.join(cfg['generated'], scrip_name, f'{model}.{scrip_name}_Next_Close.csv')
+                file = str(os.path.join(cfg['generated'], scrip_name, f'{model}.{scrip_name}_Next_Close.csv'))
                 curr_df = pd.read_csv(file)
+                logger.debug(f"Next close for {scrip_name} & {model}:\n{curr_df}")
                 if len(curr_df) == 0:
                     logger.info(f"No records for {scrip_name} & {model} combination")
                     return
@@ -138,20 +139,26 @@ class Combiner:
                 curr_df['token'] = self.shoonya.get_token(symbol)
                 curr_df['tick'] = 0.05
                 dfs.append(curr_df)
+        logger.debug(f"Before concat of DFS:\n{dfs}")
         self.pred = pd.concat(dfs)
         self.pred.to_csv(PRED_FILE, float_format='%.2f', index=False)
         self.__get_pred_with_accuracy()
+        logger.info(f"Update Pred post accuracy {self.pred}")
         for acct in cfg['steps']['accounts']:
             key = acct['name']
             cap = acct['capital']
             cap_loading = acct.get('cap_loading', None)
+            logger.debug(f"Params: Key:{key}, cap:{cap}, cap_loading: {cap_loading}")
             threshold = acct.get('threshold', cfg['steps']['threshold'])
+            logger.debug(f"threshold: {threshold}")
             filter_pred = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
+            logger.debug(f"filter_pred:\n{filter_pred}")
             val = self.__get_quantity(filter_pred, cap, cap_loading)
             val = val.loc[val.quantity > 0]
             val.drop(columns=["strategy", "entry_pct", "pct_success", "pct_ret", "weight", "pct_weight", "alloc"],
                      axis=1, inplace=True)
             val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
+            logger.info(f"Entries generated for {key}")
 
         val_res = self.__validate()
         if val_res is not None:
@@ -175,12 +182,16 @@ class Combiner:
         return self.pred.loc[(self.pred.pct_ret > min_pct_ret) & (self.pred.pct_success > min_pct_success)]
 
     def __get_pred_with_accuracy(self, pred: pd.DataFrame = None, accuracy: pd.DataFrame = None):
+        logger.debug("Starting __get_pred_with_accuracy")
         if pred is None:
             pred = pd.read_csv(PRED_FILE)
         if accuracy is None:
             accuracy = pd.read_csv(ACCURACY_FILE)
+        logger.debug(f"Pred:\n{pred}")
+        logger.debug(f"Accuracy:\n{accuracy}")
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
                       right_on=["scrip", "strategy"])
+        logger.debug(f"Merged:\n{df}")
         df[["pct_success", "entry_pct", "pct_ret"]] = df.apply(get_direction_pct, axis=1, result_type='expand')
         df.drop(columns=['l_entry_pct', 'l_pct_success', 'l_pct', 's_entry_pct', 's_pct_success', 's_pct'], axis=1,
                 inplace=True)
@@ -191,7 +202,7 @@ class Combiner:
         res = []
         for scrip in cfg['steps']['scrips']:
             for strategy in cfg['steps']['strats']:
-                file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv')
+                file = str(os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Pred.csv'))
                 results = pd.read_csv(file)
                 results = results[['target', 'signal', 'time']]
                 results['time'] = results['time'].shift(-1)
@@ -252,8 +263,8 @@ class Combiner:
             if len(acct_trades) > 0:
                 # Prepare & Dump results
                 acct_trades.sort_values(by=['date', 'scrip'], inplace=True)
-                acct_trades.to_csv(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'),
-                                   float_format='%.2f', index=False)
+                file = str(os.path.join(cfg['generated'], 'summary', key + '-BT-Trades.csv'))
+                acct_trades.to_csv(file, float_format='%.2f', index=False)
                 grouped = acct_trades[['date', 'pnl', 'margin']].groupby(['date'])
                 pnl = grouped['pnl'].sum()
                 margin = grouped['margin'].sum()
