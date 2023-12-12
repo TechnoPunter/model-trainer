@@ -143,7 +143,7 @@ class Combiner:
         self.pred = pd.concat(dfs)
         self.pred.to_csv(PRED_FILE, float_format='%.2f', index=False)
         self.__get_pred_with_accuracy()
-        logger.info(f"Update Pred post accuracy {self.pred}")
+        logger.info(f"Update Pred post accuracy\n{self.pred}")
         for acct in cfg['steps']['accounts']:
             key = acct['name']
             cap = acct['capital']
