@@ -16,7 +16,7 @@ def run_accuracy(trader_db: DatabaseEngine):
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
-            file = os.path.join(cfg['generated'], scrip_, f'trainer.strategies.{strategy_}.{scrip_}_Raw_Pred.csv')
+            file = str(os.path.join(cfg['generated'], scrip_, f'trainer.strategies.{strategy_}.{scrip_}_Raw_Pred.csv'))
             raw_pred_df_ = pd.read_csv(file)
             params_.append({"scrip": scrip_, "strategy": strategy_, "raw_pred_df": raw_pred_df_})
 
@@ -42,15 +42,18 @@ def load_mtm(trader_db: DatabaseEngine):
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
             logger.info(f"Processing Scrip:{scrip_} & Strategy:{strategy_}")
-            file = os.path.join(cfg['generated'], scrip_,
-                                f'trainer.strategies.{strategy_}.{scrip_}_Raw_Trades_MTM.csv')
+            file = str(os.path.join(cfg['generated'], scrip_,
+                                    f'trainer.strategies.{strategy_}.{scrip_}_Raw_Trades_MTM.csv'))
             df = pd.read_csv(file)
             if len(df) == 0:
                 logger.error("Empty Trades MTM File")
             else:
                 predicate = (f"m.{TRADES_MTM_TABLE}.scrip == '{scrip_}',"
-                             f"m.{TRADES_MTM_TABLE}.strategy == 'trainer.strategies.{strategy_}'")
+                             f"m.{TRADES_MTM_TABLE}.strategy == 'trainer.strategies.{strategy_}',"
+                             f"m.{TRADES_MTM_TABLE}.acct == 'Backtesting'")
                 trader_db.delete_recs(table=TRADES_MTM_TABLE, predicate=predicate)
+                df = df.assign(acct='Backtesting')
+                df.fillna(0, inplace=True)
                 trader_db.bulk_insert(table=TRADES_MTM_TABLE, data=df)
                 logger.info(f"Added {len(df)} records into Trades MTM Table")
 
