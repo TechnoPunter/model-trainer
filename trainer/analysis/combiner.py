@@ -46,38 +46,14 @@ ACCT = 'Trader-V2-Pralhad'
 
 class Combiner:
     symbols: pd.DataFrame
-    trader_db: DatabaseEngine
     shoonya: Shoonya
 
-    def __init__(self, trader_db: DatabaseEngine = None, shoonya: Shoonya = None):
-        if trader_db is None:
-            self.trader_db = DatabaseEngine()
-        else:
-            self.trader_db = trader_db
+    def __init__(self, shoonya: Shoonya = None):
         if shoonya is None:
             self.shoonya = Shoonya(ACCT)
         else:
             self.shoonya = shoonya
-        self.thresholds = self.__get_sl_thresholds()
         self.pred = pd.DataFrame()
-
-    def __get_sl_thresholds(self):
-        """
-        Read all data from stop_loss_thresholds
-        Returns: Dict { K: scrip + direction, V : sl, trail_sl}
-
-        """
-        result = {}
-        recs = self.trader_db.query("SlThresholds", "1==1")
-        for item in recs:
-            result[":".join([item.scrip, str(item.direction), item.strategy])] = item
-        return result
-
-    def __get_threshold(self, df) -> SlThresholds:
-        logger.debug(f"Getting threshold for\n{df}")
-        row = df.iloc[0]
-        key = ":".join([row.scrip, str(row.signal), row.model])
-        return self.thresholds.get(key)
 
     @staticmethod
     def __get_quantity(df: pd.DataFrame, capital: float, cap_loading: float = 1.0):
@@ -160,12 +136,7 @@ class Combiner:
                 curr_df[['scrip', 'model']] = [[scrip_name, model]]
                 curr_df[['exchange', 'symbol']] = [[exchange, symbol]]
                 curr_df['token'] = self.shoonya.get_token(symbol)
-                threshold = self.__get_threshold(curr_df)
-                if threshold is not None:
-                    curr_df[['target_pct', 'sl_pct', 'trail_sl_pct', 'tick']] = [
-                        [threshold.target, threshold.sl, threshold.trail_sl, threshold.tick]]
-                else:
-                    curr_df[['target_pct', 'sl_pct', 'trail_sl_pct', 'tick']] = np.NaN
+                curr_df['tick'] = 0.05
                 dfs.append(curr_df)
         self.pred = pd.concat(dfs)
         self.pred.to_csv(PRED_FILE, float_format='%.2f', index=False)

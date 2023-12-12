@@ -230,7 +230,8 @@ class ModelTrainer:
             if not os.path.exists(strategy_result_path):
                 os.makedirs(strategy_result_path)
             pred_key = ".".join([strategy.__name__, scrip_name])
-            raw_df_out = pd.read_csv(os.path.join(params['work_path'], pred_key + RAW_PRED_FILE_NAME))
+            pred_file_path = str(os.path.join(params['work_path'], pred_key + RAW_PRED_FILE_NAME))
+            raw_df_out = pd.read_csv(pred_file_path)
             raw_df_out['time'] = raw_df_out['time'].shift(-1)
             raw_df_out.dropna(subset=['time'], inplace=True)
             long_pred = raw_df_out.loc[raw_df_out.signal == 1]
@@ -257,7 +258,8 @@ class ModelTrainer:
     def run_scenario(run_list: tuple):
         run_key, run_params, scrip, pred_df, tick_df, result_path = run_list
         n = Nova(scrip=scrip, pred_df=pred_df, tick_df=tick_df)
-        n.process_events(os.path.join(result_path, run_key + PNL_FILE_NAME), params=run_params)
+        pnl_file_path = str(os.path.join(result_path, run_key + PNL_FILE_NAME))
+        n.process_events(pnl_file_path, params=run_params)
 
     @staticmethod
     def handle_result_files(ra_data):
@@ -335,7 +337,7 @@ class ModelTrainer:
                 ra_data.update(self.__analyse(strategies, scrip, params))
 
         if "combine-predictions" in opts:
-            c = Combiner(trader_db=self.trader_db, shoonya=self.s)
+            c = Combiner(shoonya=self.s)
             res = c.combine_predictions()
             logger.info(f"Combiner Results: {res}")
 
@@ -352,7 +354,7 @@ class ModelTrainer:
             load_mtm(self.trader_db)
 
         if "run-weighted-bt" in opts:
-            c = Combiner(trader_db=self.trader_db, shoonya=self.s)
+            c = Combiner(shoonya=self.s)
             res = c.weighted_backtest()
             logger.info(f"Combiner Results: {res}")
 
