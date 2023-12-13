@@ -18,7 +18,7 @@ def run_accuracy(trader_db: DatabaseEngine):
         for strategy_ in cfg['steps']['strats']:
             file = str(os.path.join(cfg['generated'], scrip_, f'trainer.strategies.{strategy_}.{scrip_}_Raw_Pred.csv'))
             raw_pred_df_ = pd.read_csv(file)
-            params_.append({"scrip": scrip_, "strategy": strategy_, "raw_pred_df": raw_pred_df_})
+            params_.append({"scrip": scrip_, "strategy": MODEL_PREFIX + strategy_, "raw_pred_df": raw_pred_df_})
 
     bt_trades, bt_stats, bt_mtm = f.run_accuracy(params_)
     bt_stats.to_csv(ACCURACY_FILE, float_format='%.2f', index=False)
