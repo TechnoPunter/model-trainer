@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
-from commons.consts.consts import IST
+from commons.consts.consts import IST, MODEL_PREFIX, ACCURACY_FILE
 from commons.dataprovider.filereader import get_base_data
 from commons.loggers.setup_logger import setup_logging
 
@@ -17,10 +17,9 @@ SYMBOL_MASTER = "https://api.shoonya.com/NSE_symbols.txt.zip"
 SCRIP_MAP = {'BAJAJ_AUTO-EQ': 'BAJAJ-AUTO-EQ', 'M_M-EQ': 'M&M-EQ'}
 TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
 PRED_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Pred.csv')
-ACCURACY_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Accuracy.csv')
-ACCURACY_COLS = ["scrip", "strategy", "l_entry_pct", "l_pct_success", "l_pct", "s_entry_pct", "s_pct_success", "s_pct"]
+ACCURACY_COLS = ["scrip", "strategy", "trade_date", "l_pct_entry", "l_pct_success", "l_pct_returns",
+                 "s_pct_entry", "s_pct_success", "s_pct_returns"]
 QUANTITY_COLS = ["scrip", "model", "date", "quantity"]
-MODEL_PREFIX = 'trainer.strategies.'
 
 
 def calc_weight(row):
@@ -33,9 +32,9 @@ def calc_weight(row):
 
 def get_direction_pct(row):
     if row['signal'] == 1:
-        return row['l_pct_success'], row['l_entry_pct'], row['l_pct']
+        return row['l_pct_success'], row['l_pct_entry'], row['l_pct_returns']
     else:
-        return row['s_pct_success'], row['s_entry_pct'], row['s_pct']
+        return row['s_pct_success'], row['s_pct_entry'], row['s_pct_returns']
 
 
 ACCT = 'Trader-V2-Pralhad'
@@ -189,12 +188,12 @@ class Combiner:
             accuracy = pd.read_csv(ACCURACY_FILE)
         logger.debug(f"Pred:\n{pred}")
         logger.debug(f"Accuracy:\n{accuracy}")
-        df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
-                      right_on=["scrip", "strategy"])
+        df = pd.merge(pred, accuracy[ACCURACY_COLS], how="left", left_on=["scrip", "model", "date"],
+                      right_on=["scrip", "strategy", "trade_date"])
         logger.debug(f"Merged:\n{df}")
         df[["pct_success", "entry_pct", "pct_ret"]] = df.apply(get_direction_pct, axis=1, result_type='expand')
-        df.drop(columns=['l_entry_pct', 'l_pct_success', 'l_pct', 's_entry_pct', 's_pct_success', 's_pct'], axis=1,
-                inplace=True)
+        df.drop(columns=['l_pct_entry', 'l_pct_success', 'l_pct_returns', 's_pct_entry', 's_pct_success',
+                         's_pct_returns'], axis=1, inplace=True)
         self.pred = df
 
     @staticmethod
@@ -253,12 +252,13 @@ class Combiner:
                 # Combine with trades
                 val = pd.merge(curr_trades, qty_df[QUANTITY_COLS], how="inner",
                                left_on=["scrip", "model", "date"], right_on=["scrip", "model", "date"])
-                val = val.loc[val.quantity > 0]
-                val['margin'] = val['entry_price'] * val['quantity']
-                val['pnl'] = val['target_pnl'] * val['quantity']
+                if len(val) > 0:
+                    val = val.loc[val.quantity > 0]
+                    val['margin'] = val['entry_price'] * val['quantity']
+                    val['pnl'] = val['pnl'] * val['quantity']
 
-                # Append to results
-                acct_trades = pd.concat([acct_trades, val])
+                    # Append to results
+                    acct_trades = pd.concat([acct_trades, val])
 
             if len(acct_trades) > 0:
                 # Prepare & Dump results
