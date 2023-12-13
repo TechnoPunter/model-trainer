@@ -188,7 +188,7 @@ class Combiner:
             accuracy = pd.read_csv(ACCURACY_FILE)
         logger.debug(f"Pred:\n{pred}")
         logger.debug(f"Accuracy:\n{accuracy}")
-        df = pd.merge(pred, accuracy[ACCURACY_COLS], how="left", left_on=["scrip", "model", "date"],
+        df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model", "date"],
                       right_on=["scrip", "strategy", "trade_date"])
         logger.debug(f"Merged:\n{df}")
         df[["pct_success", "entry_pct", "pct_ret"]] = df.apply(get_direction_pct, axis=1, result_type='expand')
