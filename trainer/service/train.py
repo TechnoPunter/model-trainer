@@ -337,7 +337,7 @@ class ModelTrainer:
                 ra_data.update(self.__analyse(strategies, scrip, params))
 
         if "combine-predictions" in opts:
-            c = Combiner(shoonya=self.s)
+            c = Combiner(shoonya=self.s, scrip_data=self.sd)
             res = c.combine_predictions()
             logger.info(f"Combiner Results: {res}")
 
@@ -354,7 +354,7 @@ class ModelTrainer:
             load_mtm(self.trader_db)
 
         if "run-weighted-bt" in opts:
-            c = Combiner(shoonya=self.s)
+            c = Combiner(shoonya=self.s, scrip_data=self.sd)
             res = c.weighted_backtest()
             logger.info(f"Combiner Results: {res}")
 

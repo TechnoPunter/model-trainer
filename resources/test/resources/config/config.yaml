@@ -1,0 +1,5 @@
+# List of all files included here
+include:
+  - secrets
+  - alert
+  - trainer-config
