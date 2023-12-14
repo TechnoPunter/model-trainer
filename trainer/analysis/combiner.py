@@ -6,7 +6,8 @@ import pandas as pd
 from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
 from commons.consts.consts import IST, MODEL_PREFIX, ACCURACY_FILE
-from commons.dataprovider.filereader import get_base_data
+from commons.dataprovider.ScripData import ScripData
+from commons.dataprovider.database import DatabaseEngine
 from commons.loggers.setup_logger import setup_logging
 
 from trainer.utils.EmailAlert import send_email
@@ -44,11 +45,16 @@ class Combiner:
     symbols: pd.DataFrame
     shoonya: Shoonya
 
-    def __init__(self, shoonya: Shoonya = None):
+    def __init__(self, shoonya: Shoonya = None, scrip_data: ScripData = None):
         if shoonya is None:
             self.shoonya = Shoonya(ACCT)
         else:
             self.shoonya = shoonya
+        if scrip_data is None:
+            trader_db = DatabaseEngine()
+            self.sd = ScripData(trader_db=trader_db)
+        else:
+            self.sd = scrip_data
         self.pred = pd.DataFrame()
 
     @staticmethod
@@ -86,12 +92,11 @@ class Combiner:
         logger.info(f"Return __get_quantity:\n{df}")
         return df
 
-    @staticmethod
-    def __validate():
+    def __validate(self):
         df = []
         # Get the latest record from Low TF Data
         for scrip in cfg['steps']['scrips']:
-            scrip_data = get_base_data(scrip)
+            scrip_data = self.sd.get_base_data(scrip)
             scrip_data.loc[:, 'scrip'] = scrip
             last_row = scrip_data.iloc[[-1]]
             last_row.reset_index(inplace=True)
@@ -141,7 +146,7 @@ class Combiner:
         logger.debug(f"Before concat of DFS:\n{dfs}")
         self.pred = pd.concat(dfs)
         self.pred.to_csv(PRED_FILE, float_format='%.2f', index=False)
-        self.__get_pred_with_accuracy()
+        self.__get_accuracy_pred_next_close()
         logger.info(f"Update Pred post accuracy\n{self.pred}")
         for acct in cfg['steps']['accounts']:
             key = acct['name']
@@ -152,11 +157,12 @@ class Combiner:
             logger.debug(f"threshold: {threshold}")
             filter_pred = self.__apply_filter(threshold['min_pct_ret'], threshold['min_pct_success'])
             logger.debug(f"filter_pred:\n{filter_pred}")
-            val = self.__get_quantity(filter_pred, cap, cap_loading)
-            val = val.loc[val.quantity > 0]
-            val.drop(columns=["strategy", "entry_pct", "pct_success", "pct_ret", "weight", "pct_weight", "alloc"],
-                     axis=1, inplace=True)
-            val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
+            if len(filter_pred) > 0:
+                val = self.__get_quantity(filter_pred, cap, cap_loading)
+                val = val.loc[val.quantity > 0]
+                val.drop(columns=["strategy", "entry_pct", "pct_success", "pct_ret", "weight", "pct_weight", "alloc"],
+                         axis=1, inplace=True)
+                val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
             logger.info(f"Entries generated for {key}")
 
         val_res = self.__validate()
@@ -180,10 +186,43 @@ class Combiner:
         """
         return self.pred.loc[(self.pred.pct_ret > min_pct_ret) & (self.pred.pct_success > min_pct_success)]
 
-    def __get_pred_with_accuracy(self, pred: pd.DataFrame = None, accuracy: pd.DataFrame = None):
-        logger.debug("Starting __get_pred_with_accuracy")
+    def __get_accuracy_pred_next_close(self, pred: pd.DataFrame = None, accuracy: pd.DataFrame = None):
+        """
+        Enriches the prediction data set with accuracy results from the last available date. Since accuracy runs on
+        weekends only might be results from previous Saturday.
+        :param pred: Prediction data frame - can be None in case it is called from Weighted BT
+        :param accuracy: Accuracy data for scrip, strategy & date
+        :return:
+        """
+        logger.debug("Starting __get_accuracy_pred_next_close")
         if pred is None:
             pred = pd.read_csv(PRED_FILE)
+        if accuracy is None:
+            accuracy = pd.read_csv(ACCURACY_FILE)
+
+        curr_accuracy = accuracy.loc[
+            accuracy.groupby(['scrip', 'strategy'])['trade_date'].transform(max) == accuracy['trade_date']]
+
+        logger.debug(f"Pred:\n{pred}")
+        logger.debug(f"Accuracy:\n{accuracy}")
+        df = pd.merge(pred, curr_accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model"],
+                      right_on=["scrip", "strategy"])
+        logger.debug(f"Merged:\n{df}")
+        df[["pct_success", "entry_pct", "pct_ret"]] = df.apply(get_direction_pct, axis=1, result_type='expand')
+        df.drop(columns=['l_pct_entry', 'l_pct_success', 'l_pct_returns', 's_pct_entry', 's_pct_success',
+                         's_pct_returns'], axis=1, inplace=True)
+        self.pred = df
+
+    def __get_accuracy_pred_weighted_bt(self, pred: pd.DataFrame, accuracy: pd.DataFrame = None):
+        """
+        Enriches the prediction data set with accuracy results from the last available date as at that point in time.
+        In case of weighted backtesting - extra care is to be taken to ensure data from future dates is not referred
+        here. So pick the latest row <= current trade date
+        :param pred: Prediction data frame - can be None in case it is called from Weigted BT
+        :param accuracy: Accuracy data for scrip, strategy & date
+        :return:
+        """
+        logger.debug("Starting __get_accuracy_pred_weighted_bt")
         if accuracy is None:
             accuracy = pd.read_csv(ACCURACY_FILE)
         logger.debug(f"Pred:\n{pred}")
@@ -232,7 +271,7 @@ class Combiner:
         trades.rename(columns={"strategy": "model", "open": "close"}, inplace=True)
         raw_pred_df = self.__prep_pred_data()
         raw_pred_df.rename(columns={"strategy": "model", "target": "close"}, inplace=True)
-        self.__get_pred_with_accuracy(pred=raw_pred_df)
+        self.__get_accuracy_pred_weighted_bt(pred=raw_pred_df)
 
         for acct in cfg['steps']['accounts']:
             acct_trades = pd.DataFrame()
