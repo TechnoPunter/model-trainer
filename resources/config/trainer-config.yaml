@@ -86,7 +86,7 @@ steps:
 #    - NSE_ADANIPORTS
   threshold:
     min_pct_ret: 1
-    min_pct_success: 60
+    min_pct_success: 30
   weights:
     entry_pct: 1
     pct_success: 1
@@ -97,17 +97,17 @@ steps:
       capital: 100000
       threshold:
         min_pct_ret: 1
-        min_pct_success: 60
+        min_pct_success: 30
     - name: Trader-V2-Pralhad
       capital: 100000
       threshold:
         min_pct_ret: 1
-        min_pct_success: 60
+        min_pct_success: 30
     - name: Trader-V2-Sundar
       capital: 20000
       threshold:
         min_pct_ret: 1
-        min_pct_success: 60
+        min_pct_success: 30
     - name: Trader-V2-Mahi
       capital: 10000
       cap_loading: 1.0
