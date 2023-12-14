@@ -1,5 +1,5 @@
 email:
-  url: "http://trader.technotrix.co.in/www/emailservice.php"
+  url: "http://trader.technotrix.co.in/emailservice.php"
   recipients: 'pro.kamath%40gmail.com%2Calansaviolobo%40gmail.com%2Cssundarganesh%40gmail.com%2Cmahipraneeth948@gmail.com'
   acct-recipient:
     Trader-V2-Alan: alansaviolobo%40gmail.com
