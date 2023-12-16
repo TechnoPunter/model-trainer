@@ -27,7 +27,7 @@ def run_accuracy(trader_db: DatabaseEngine):
         if len(mtm_df) > 0:
             logger.info(f"Processing {key}")
             scrip, strategy = key.split(":")
-            file = os.path.join(cfg['generated'], scrip, f'trainer.strategies.{strategy}.{scrip}_Raw_Trades_MTM.csv')
+            file = os.path.join(cfg['generated'], scrip, f'{strategy}.{scrip}_Raw_Trades_MTM.csv')
             mtm_df.to_csv(file, float_format='%.2f', index=False)
     return bt_stats
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     setup_logging("accuracy.log")
     db = DatabaseEngine()
-    x = run_accuracy(db)
-    x.to_clipboard()
+    # x = run_accuracy(db)
+    # x.to_clipboard()
     load_mtm(db)
     print("Done")
