@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 from tests.Utils import *
-from trainer.service.train import ModelTrainer
 
 
 class TestCombiner(unittest.TestCase):
@@ -10,9 +9,12 @@ class TestCombiner(unittest.TestCase):
     steps_param = read_file('reward-factor/trainer-config.yaml')
 
     @patch.dict('commons.config.reader.cfg', {"steps": steps_param['steps']})
+    @patch.dict('commons.config.reader.cfg',
+                {"generated": os.path.join(TEST_RESOURCE_DIR, 'reward-factor', 'generated')})
     # @patch('commons.backtest.fastBT.FastBT.ScripData')
     @patch('commons.dataprovider.ScripData.ScripData')
     def test_run_pipeline(self, mock_api):
+        from trainer.service.train import ModelTrainer
         tick_data = read_file_df(name="reward-factor/tick-data.csv")
         base_data = read_file_df(name="reward-factor/base-data.csv")
 
