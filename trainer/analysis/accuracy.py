@@ -4,15 +4,16 @@ import pandas as pd
 from commons.backtest.fastBT import FastBT
 from commons.config.reader import cfg
 from commons.consts.consts import *
+from commons.dataprovider.ScripData import ScripData
 from commons.dataprovider.database import DatabaseEngine
 
 logger = logging.getLogger(__name__)
 
 
-def run_accuracy(trader_db: DatabaseEngine):
+def run_base_accuracy(scrip_data: ScripData = None):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
-    f = FastBT()
+    f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data)
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
@@ -21,13 +22,37 @@ def run_accuracy(trader_db: DatabaseEngine):
             params_.append({"scrip": scrip_, "strategy": MODEL_PREFIX + strategy_, "raw_pred_df": raw_pred_df_})
 
     bt_trades, bt_stats, bt_mtm = f.run_accuracy(params_)
-    bt_stats.to_csv(ACCURACY_FILE, float_format='%.2f', index=False)
-    bt_trades.to_csv(TRADES_FILE, float_format='%.2f', index=False)
+    bt_stats.to_csv(BASE_ACCURACY_FILE, float_format='%.2f', index=False)
+    bt_trades.to_csv(BASE_TRADES_FILE, float_format='%.2f', index=False)
     for key, mtm_df in bt_mtm.items():
         if len(mtm_df) > 0:
             logger.info(f"Processing {key}")
             scrip, strategy = key.split(":")
-            file = os.path.join(cfg['generated'], scrip, f'{strategy}.{scrip}_Raw_Trades_MTM.csv')
+            file = os.path.join(cfg['generated'], scrip, f'{strategy}.{scrip}_Base_Raw_Trades_MTM.csv')
+            mtm_df.to_csv(file, float_format='%.2f', index=False)
+    return bt_stats
+
+
+def run_rf_accuracy(scrip_data: ScripData = None):
+    if not os.path.exists(SUMMARY_PATH):
+        os.makedirs(SUMMARY_PATH)
+    accu_df = pd.read_csv(BASE_ACCURACY_FILE)
+    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data)
+    params_ = []
+    for scrip_ in cfg['steps']['scrips']:
+        for strategy_ in cfg['steps']['strats']:
+            file = str(os.path.join(cfg['generated'], scrip_, f'trainer.strategies.{strategy_}.{scrip_}_Raw_Pred.csv'))
+            raw_pred_df_ = pd.read_csv(file)
+            params_.append({"scrip": scrip_, "strategy": MODEL_PREFIX + strategy_, "raw_pred_df": raw_pred_df_})
+
+    bt_trades, bt_stats, bt_mtm = f.run_accuracy(params_)
+    bt_stats.to_csv(RF_ACCURACY_FILE, float_format='%.2f', index=False)
+    bt_trades.to_csv(RF_TRADES_FILE, float_format='%.2f', index=False)
+    for key, mtm_df in bt_mtm.items():
+        if len(mtm_df) > 0:
+            logger.info(f"Processing {key}")
+            scrip, strategy = key.split(":")
+            file = os.path.join(cfg['generated'], scrip, f'{strategy}.{scrip}_RF_Raw_Trades_MTM.csv')
             mtm_df.to_csv(file, float_format='%.2f', index=False)
     return bt_stats
 
@@ -43,7 +68,7 @@ def load_mtm(trader_db: DatabaseEngine):
         for strategy_ in cfg['steps']['strats']:
             logger.info(f"Processing Scrip:{scrip_} & Strategy:{strategy_}")
             file = str(os.path.join(cfg['generated'], scrip_,
-                                    f'trainer.strategies.{strategy_}.{scrip_}_Raw_Trades_MTM.csv'))
+                                    f'trainer.strategies.{strategy_}.{scrip_}_RF_Raw_Trades_MTM.csv'))
             df = pd.read_csv(file)
             if len(df) == 0:
                 logger.error("Empty Trades MTM File")
