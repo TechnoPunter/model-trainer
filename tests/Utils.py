@@ -5,6 +5,7 @@ import unittest
 
 
 import pandas as pd
+import yaml
 
 if os.path.exists('/var/www/model-trainer'):
     REPO_PATH = '/var/www/model-trainer/'
@@ -23,13 +24,16 @@ logger = logging.getLogger(__name__)
 
 def read_file(name, ret_type: str = "JSON"):
     res_file_path = os.path.join(TEST_RESOURCE_DIR, name)
+    file_type = name.split(".")[-1]
     with open(res_file_path, 'r') as file:
         result = file.read()
         if ret_type == "DF":
-            if "csv" in name:
+            if file_type == "csv":
                 return pd.read_csv(res_file_path)
             else:
                 return pd.DataFrame(json.loads(result))
+        elif file_type == "yaml":
+            return yaml.safe_load(result)
         else:
             return json.loads(result)
 

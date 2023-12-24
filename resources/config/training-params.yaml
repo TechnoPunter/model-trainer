@@ -5,7 +5,9 @@ training:
     split-type: fixed_date
     low-dt: "2023-01-01"
   test:
-    #    split-type: fixed_pct
-    #    split-pct: 0.35
-    split-type: fixed_date
-    low-dt: "2023-07-01"
+    split-type: fixed_days
+    num-days: 90
+#    split-type: fixed_pct
+#    split-pct: 0.35
+#    split-type: fixed_date
+#    low-dt: "2023-09-01"

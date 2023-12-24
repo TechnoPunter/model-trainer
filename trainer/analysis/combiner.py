@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
-from commons.consts.consts import IST, MODEL_PREFIX, ACCURACY_FILE
+from commons.consts.consts import IST, MODEL_PREFIX, RF_ACCURACY_FILE, RF_TRADES_FILE
 from commons.dataprovider.ScripData import ScripData
 from commons.dataprovider.database import DatabaseEngine
 from commons.loggers.setup_logger import setup_logging
@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 SYMBOL_MASTER = "https://api.shoonya.com/NSE_symbols.txt.zip"
 SCRIP_MAP = {'BAJAJ_AUTO-EQ': 'BAJAJ-AUTO-EQ', 'M_M-EQ': 'M&M-EQ'}
-TRADES_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Trades.csv')
 PRED_FILE = os.path.join(cfg['generated'], 'summary', 'Portfolio-Pred.csv')
 ACCURACY_COLS = ["scrip", "strategy", "trade_date", "l_pct_entry", "l_pct_success", "l_pct_returns",
                  "s_pct_entry", "s_pct_success", "s_pct_returns"]
@@ -198,7 +197,7 @@ class Combiner:
         if pred is None:
             pred = pd.read_csv(PRED_FILE)
         if accuracy is None:
-            accuracy = pd.read_csv(ACCURACY_FILE)
+            accuracy = pd.read_csv(RF_ACCURACY_FILE)
 
         curr_accuracy = accuracy.loc[
             accuracy.groupby(['scrip', 'strategy'])['trade_date'].transform(max) == accuracy['trade_date']]
@@ -224,7 +223,7 @@ class Combiner:
         """
         logger.debug("Starting __get_accuracy_pred_weighted_bt")
         if accuracy is None:
-            accuracy = pd.read_csv(ACCURACY_FILE)
+            accuracy = pd.read_csv(RF_ACCURACY_FILE)
         logger.debug(f"Pred:\n{pred}")
         logger.debug(f"Accuracy:\n{accuracy}")
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model", "date"],
@@ -267,7 +266,7 @@ class Combiner:
             e. Get Acct BT Results
         :return:
         """
-        trades = pd.read_csv(TRADES_FILE)
+        trades = pd.read_csv(RF_TRADES_FILE)
         trades.rename(columns={"strategy": "model", "open": "close"}, inplace=True)
         raw_pred_df = self.__prep_pred_data()
         raw_pred_df.rename(columns={"strategy": "model", "target": "close"}, inplace=True)

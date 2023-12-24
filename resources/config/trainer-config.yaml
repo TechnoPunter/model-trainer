@@ -7,7 +7,8 @@ steps:
     - combine-predictions
 #    - run-analysis
 #    - run-ranking
-#    - run-accuracy
+#    - run-base-accuracy
+#    - run-rf-accuracy
 #    - run-weighted-bt
 #    - load-results
 #    - load-trade-mtm

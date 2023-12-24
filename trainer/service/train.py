@@ -11,7 +11,7 @@ from commons.dataprovider.database import DatabaseEngine
 from commons.loggers.setup_logger import setup_logging
 from commons.service.ScripDataService import ScripDataService
 
-from trainer.analysis.accuracy import run_accuracy, load_mtm
+from trainer.analysis.accuracy import run_base_accuracy, load_mtm, run_rf_accuracy
 from trainer.analysis.combiner import Combiner
 from trainer.analysis.resultranker import rank_results
 from trainer.analysis.results import Result
@@ -28,12 +28,15 @@ class ModelTrainer:
     cfg: dict
     trader_db: DatabaseEngine
 
-    def __init__(self):
+    def __init__(self, scrip_data: ScripData = None):
         self.cfg = cfg
         self.trader_db = DatabaseEngine()
         self.threshold = self.__get_sl_threshold()
         self.threshold_range = self.__get_sl_threshold_range()
-        self.sd = ScripData(trader_db=self.trader_db)
+        if scrip_data is None:
+            self.sd = ScripData(trader_db=self.trader_db)
+        else:
+            self.sd = scrip_data
         self.s = Shoonya(ACCT)
         self.sds = ScripDataService(shoonya=self.s, trader_db=self.trader_db)
 
@@ -347,8 +350,11 @@ class ModelTrainer:
         if "run-ranking" in opts:
             rank_results()
 
-        if "run-accuracy" in opts:
-            run_accuracy(self.trader_db)
+        if "run-base-accuracy" in opts:
+            run_base_accuracy(scrip_data=self.sd)
+
+        if "run-rf-accuracy" in opts:
+            run_rf_accuracy(scrip_data=self.sd)
 
         if "load-trade-mtm" in opts:
             load_mtm(self.trader_db)

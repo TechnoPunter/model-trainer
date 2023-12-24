@@ -3,3 +3,4 @@ include:
   - secrets
   - alert
   - trainer-config
+  - risk-params
