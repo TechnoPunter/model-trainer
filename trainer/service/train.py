@@ -1,5 +1,5 @@
-import importlib
 import logging
+import multiprocessing
 from multiprocessing import Pool
 
 import pandas as pd
@@ -16,6 +16,7 @@ from trainer.analysis.combiner import Combiner
 from trainer.analysis.resultranker import rank_results
 from trainer.analysis.results import Result
 from trainer.backtest.nova import Nova
+from trainer.service.run_get_predictions import run_get_predictions
 from trainer.utils.TrainSplit import get_filtered_df
 from trainer.utils.standard_prep import standard_prep
 
@@ -28,11 +29,12 @@ class ModelTrainer:
     cfg: dict
     trader_db: DatabaseEngine
 
-    def __init__(self, scrip_data: ScripData = None):
+    def __init__(self, scrip_data: ScripData = None, exec_mode: str = "SERVER"):
         self.cfg = cfg
         self.trader_db = DatabaseEngine()
         self.threshold = self.__get_sl_threshold()
         self.threshold_range = self.__get_sl_threshold_range()
+        self.exec_mode = exec_mode
         if scrip_data is None:
             self.sd = ScripData(trader_db=self.trader_db)
         else:
@@ -54,60 +56,10 @@ class ModelTrainer:
             result[":".join([rec.scrip, str(rec.direction)])] = rec
         return result
 
-    def get_strats_modules(self, base_path: str, package_name: str):
-        result = []
-        package_path = package_name.replace('.', '/')
-        package_directory = os.path.dirname(__file__)
-        package_directory = os.path.join(package_directory, base_path, package_path)
-
-        # Loop through all files in the package directory
-        for filename in os.listdir(package_directory):
-            if filename.endswith('.py') and not (filename.startswith("__")) and \
-                    filename[:-3] in self.cfg['steps']['strats']:
-                module_name = filename[:-3]  # Remove the '.py' extension
-                module_path = f'{package_name}.{module_name}'
-                try:
-                    module = importlib.import_module(module_path)
-                    result.append(module)
-                except ImportError as e:
-                    print(f'Error importing module {module_path}: {e}')
-
-        return result
-
-    def __predict(self, params: dict, data, strategies, scrip_name: str, mode: str = 'NEXT-CLOSE') -> None:
-        """
-
-        Args:
-            params: Parameters
-            data: OHLC++ data
-            strategies: List of modules from strategy package
-            scrip_name: Name of the scrip e.g. NSE_BANDHANBNK
-
-        Returns:
-
-        """
-        for strategy in strategies:
-
-            strat_name = strategy.__name__
-            try:
-                data['scrip'] = scrip_name
-                result_df = strategy.get_predictions(data, mode, scrip_name)
-                result_df['signal'] = result_df['signal'].astype(int)
-            except Exception as ex:
-                print(f"Error with {strategy.__name__} ex: {ex}")
-                continue
-
-            if result_df is not None:
-                pred_key = ".".join([strat_name, scrip_name])
-                suffix = NEXT_CLOSE_FILE_NAME if mode == 'NEXT-CLOSE' else RAW_PRED_FILE_NAME
-                result_df.to_csv(os.path.join(params['work_path'], pred_key + suffix), index=False, float_format='%.2f')
-
-        return
-
     def __analyse(self, strategies, scrip_name: str, params: dict):
         """
         Calls run_scenario to create PNL Files for each of the strategies with set or range of SL/Target/Trail SL
-        :param strategies:
+        :param strategies: Name of strategies to run on
         :param scrip_name:
         :param params:
         :return:
@@ -229,10 +181,10 @@ class ModelTrainer:
             })
 
         for strategy in strategies:
-            strategy_result_path = os.path.join(params['result_path'], strategy.__name__)
+            strategy_result_path = str(os.path.join(params['result_path'], strategy))
             if not os.path.exists(strategy_result_path):
                 os.makedirs(strategy_result_path)
-            pred_key = ".".join([strategy.__name__, scrip_name])
+            pred_key = ".".join([strategy, scrip_name])
             pred_file_path = str(os.path.join(params['work_path'], pred_key + RAW_PRED_FILE_NAME))
             raw_df_out = pd.read_csv(pred_file_path)
             raw_df_out['time'] = raw_df_out['time'].shift(-1)
@@ -250,7 +202,8 @@ class ModelTrainer:
                 elif rec.get("signal") == '-1':
                     pred = short_pred
                 if pred is not None:
-                    run_list.append((run_key, rec, scrip_name, pred, tick_df, strategy_result_path))
+                    param = (run_key, rec, scrip_name, pred, tick_df, strategy_result_path)
+                    run_list.append(param)
 
             with Pool() as pool:
                 for result in pool.imap_unordered(self.run_scenario, run_list):
@@ -301,26 +254,26 @@ class ModelTrainer:
             opts = self.cfg['steps']['opts']
         ra_data = {}
 
-        strategies = self.get_strats_modules('../../', 'trainer.strategies')
-
         if "tv-download" in opts:
             self.sds.load_scrips_data(scrip_names=self.cfg['steps']['scrips'])
 
-        for scrip in self.cfg['steps']['scrips']:
+        prediction_param_list = []
 
+        for scrip in self.cfg['steps']['scrips']:
+            scrip_params = params
             work_path = os.path.join(GENERATED_DATA_PATH, scrip)
-            if params is None:
-                params = {"work_path": work_path}
+            if scrip_params is None:
+                scrip_params = {"work_path": work_path}
             else:
-                params['work_path'] = work_path
+                scrip_params['work_path'] = work_path
             if not os.path.exists(work_path):
                 os.makedirs(work_path)
 
             result_path = os.path.join(GENERATED_DATA_PATH, scrip, "results")
-            if params is None:
-                params = {"result_path": result_path}
+            if scrip_params is None:
+                scrip_params = {"result_path": result_path}
             else:
-                params['result_path'] = result_path
+                scrip_params['result_path'] = result_path
             if not os.path.exists(result_path):
                 os.makedirs(result_path)
 
@@ -331,11 +284,27 @@ class ModelTrainer:
 
                 prep_data = standard_prep(filtered_data)
                 if "run-backtest" in opts:
-                    self.__predict(params, prep_data, strategies, scrip, mode='BACKTEST')
+                    prediction_param_list.append((scrip_params, prep_data, scrip, 'BACKTEST'))
 
                 if "run-next-close" in opts:
-                    self.__predict(params, prep_data, strategies, scrip, mode='NEXT-CLOSE')
+                    prediction_param_list.append((scrip_params, prep_data, scrip, 'NEXT-CLOSE'))
 
+        if self.exec_mode == "SERVER":
+            try:
+                logger.info(f"About to start prediction calc with {len(prediction_param_list)} objects")
+                with Pool(processes=multiprocessing.cpu_count()) as pool:
+                    for result in pool.imap(run_get_predictions, prediction_param_list):
+                        logger.info(result)
+            except Exception as ex:
+                print(ex)
+                logger.error(f"Error in Multi Processing {ex}")
+        else:
+            for param in prediction_param_list:
+                result = run_get_predictions(param)
+                logger.info(result)
+
+        strategies = self.cfg['steps']['strats']
+        for scrip in self.cfg['steps']['scrips']:
             if "run-analysis" in opts:
                 ra_data.update(self.__analyse(strategies, scrip, params))
 
@@ -371,7 +340,7 @@ if __name__ == "__main__":
     setup_logging("train.log")
 
     logger.info("Started steps")
-    mt = ModelTrainer()
+    mt = ModelTrainer(exec_mode="SERVER")
     l_opts = None
     # l_opts = []
     # l_opts.append('tv-download')
