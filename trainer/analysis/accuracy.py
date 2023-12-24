@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def run_base_accuracy(scrip_data: ScripData = None):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
-    f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data)
+    f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data, exec_mode="LOCAL")
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
@@ -37,7 +37,7 @@ def run_rf_accuracy(scrip_data: ScripData = None):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
     accu_df = pd.read_csv(BASE_ACCURACY_FILE)
-    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data)
+    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data, exec_mode="LOCAL")
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
