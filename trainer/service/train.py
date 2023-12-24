@@ -320,10 +320,10 @@ class ModelTrainer:
             rank_results()
 
         if "run-base-accuracy" in opts:
-            run_base_accuracy(scrip_data=self.sd)
+            run_base_accuracy(scrip_data=self.sd, exec_mode=self.exec_mode)
 
         if "run-rf-accuracy" in opts:
-            run_rf_accuracy(scrip_data=self.sd)
+            run_rf_accuracy(scrip_data=self.sd, exec_mode=self.exec_mode)
 
         if "load-trade-mtm" in opts:
             load_mtm(self.trader_db)

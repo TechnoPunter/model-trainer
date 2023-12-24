@@ -10,10 +10,10 @@ from commons.dataprovider.database import DatabaseEngine
 logger = logging.getLogger(__name__)
 
 
-def run_base_accuracy(scrip_data: ScripData = None):
+def run_base_accuracy(scrip_data: ScripData = None, exec_mode: str = "SERVER"):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
-    f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data, exec_mode="LOCAL")
+    f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data, exec_mode=exec_mode)
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
@@ -33,11 +33,11 @@ def run_base_accuracy(scrip_data: ScripData = None):
     return bt_stats
 
 
-def run_rf_accuracy(scrip_data: ScripData = None):
+def run_rf_accuracy(scrip_data: ScripData = None, exec_mode: str = "SERVER"):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
     accu_df = pd.read_csv(BASE_ACCURACY_FILE)
-    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data, exec_mode="LOCAL")
+    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data, exec_mode=exec_mode)
     params_ = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
