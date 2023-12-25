@@ -10,20 +10,29 @@ from commons.dataprovider.database import DatabaseEngine
 logger = logging.getLogger(__name__)
 
 
-def run_base_accuracy(scrip_data: ScripData = None, exec_mode: str = "SERVER"):
-    if not os.path.exists(SUMMARY_PATH):
-        os.makedirs(SUMMARY_PATH)
+def run_prep_data(scrip_data: ScripData = None, exec_mode: str = "SERVER"):
     f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data, exec_mode=exec_mode)
-    params_ = []
+    params = []
     for scrip_ in cfg['steps']['scrips']:
         for strategy_ in cfg['steps']['strats']:
             file = str(os.path.join(cfg['generated'], scrip_, f'trainer.strategies.{strategy_}.{scrip_}_Raw_Pred.csv'))
             raw_pred_df_ = pd.read_csv(file)
-            params_.append({"scrip": scrip_, "strategy": MODEL_PREFIX + strategy_, "raw_pred_df": raw_pred_df_})
+            merged_df = f.prep_data(scrip=scrip_, strategy=MODEL_PREFIX + strategy_, raw_pred_df=raw_pred_df_,
+                                    sd=scrip_data)
+            params.append({"scrip": scrip_, "strategy": MODEL_PREFIX + strategy_, "merged_df": merged_df})
+    return params
 
-    bt_trades, bt_stats, bt_mtm = f.run_accuracy(params_)
+
+def run_base_accuracy(params: list[dict], scrip_data: ScripData = None, exec_mode: str = "SERVER"):
+    if not os.path.exists(SUMMARY_PATH):
+        os.makedirs(SUMMARY_PATH)
+
+    f = FastBT(risk_mode="DEFAULT", scrip_data=scrip_data, exec_mode=exec_mode)
+    bt_trades, bt_stats, bt_mtm = f.run_accuracy(params)
+
     bt_stats.to_csv(BASE_ACCURACY_FILE, float_format='%.2f', index=False)
     bt_trades.to_csv(BASE_TRADES_FILE, float_format='%.2f', index=False)
+
     for key, mtm_df in bt_mtm.items():
         if len(mtm_df) > 0:
             logger.info(f"Processing {key}")
@@ -33,21 +42,17 @@ def run_base_accuracy(scrip_data: ScripData = None, exec_mode: str = "SERVER"):
     return bt_stats
 
 
-def run_rf_accuracy(scrip_data: ScripData = None, exec_mode: str = "SERVER"):
+def run_rf_accuracy(params: list[dict], scrip_data: ScripData = None, exec_mode: str = "SERVER"):
     if not os.path.exists(SUMMARY_PATH):
         os.makedirs(SUMMARY_PATH)
     accu_df = pd.read_csv(BASE_ACCURACY_FILE)
-    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data, exec_mode=exec_mode)
-    params_ = []
-    for scrip_ in cfg['steps']['scrips']:
-        for strategy_ in cfg['steps']['strats']:
-            file = str(os.path.join(cfg['generated'], scrip_, f'trainer.strategies.{strategy_}.{scrip_}_Raw_Pred.csv'))
-            raw_pred_df_ = pd.read_csv(file)
-            params_.append({"scrip": scrip_, "strategy": MODEL_PREFIX + strategy_, "raw_pred_df": raw_pred_df_})
 
-    bt_trades, bt_stats, bt_mtm = f.run_accuracy(params_)
+    f = FastBT(accuracy_df=accu_df, scrip_data=scrip_data, exec_mode=exec_mode)
+    bt_trades, bt_stats, bt_mtm = f.run_accuracy(params)
+
     bt_stats.to_csv(RF_ACCURACY_FILE, float_format='%.2f', index=False)
     bt_trades.to_csv(RF_TRADES_FILE, float_format='%.2f', index=False)
+
     for key, mtm_df in bt_mtm.items():
         if len(mtm_df) > 0:
             logger.info(f"Processing {key}")

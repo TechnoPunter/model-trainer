@@ -11,7 +11,7 @@ from commons.dataprovider.database import DatabaseEngine
 from commons.loggers.setup_logger import setup_logging
 from commons.service.ScripDataService import ScripDataService
 
-from trainer.analysis.accuracy import run_base_accuracy, load_mtm, run_rf_accuracy
+from trainer.analysis.accuracy import run_base_accuracy, load_mtm, run_rf_accuracy, run_prep_data
 from trainer.analysis.combiner import Combiner
 from trainer.analysis.resultranker import rank_results
 from trainer.analysis.results import Result
@@ -319,11 +319,14 @@ class ModelTrainer:
         if "run-ranking" in opts:
             rank_results()
 
-        if "run-base-accuracy" in opts:
-            run_base_accuracy(scrip_data=self.sd, exec_mode=self.exec_mode)
+        if "run-base-accuracy" in opts or "run-rf-accuracy" in opts:
+            params = run_prep_data()
 
-        if "run-rf-accuracy" in opts:
-            run_rf_accuracy(scrip_data=self.sd, exec_mode=self.exec_mode)
+            if "run-base-accuracy" in opts:
+                run_base_accuracy(params=params, scrip_data=self.sd, exec_mode=self.exec_mode)
+
+            if "run-rf-accuracy" in opts:
+                run_rf_accuracy(params=params, scrip_data=self.sd, exec_mode=self.exec_mode)
 
         if "load-trade-mtm" in opts:
             load_mtm(self.trader_db)
