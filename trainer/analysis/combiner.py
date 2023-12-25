@@ -183,7 +183,12 @@ class Combiner:
             d. Create final Entries file
         :return:
         """
-        return self.pred.loc[(self.pred.pct_ret > min_pct_ret) & (self.pred.pct_success > min_pct_success)]
+        logger.info(f"About to apply filter for with pct_ret > {min_pct_ret} "
+                    f"and *disabled* pct_success > {min_pct_success}")
+        return self.pred.loc[
+            (self.pred.pct_ret > min_pct_ret)
+            # & (self.pred.pct_success > min_pct_success)
+        ]
 
     def __get_accuracy_pred_next_close(self, pred: pd.DataFrame = None, accuracy: pd.DataFrame = None):
         """
