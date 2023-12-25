@@ -1,0 +1,7 @@
+    - scripName: {{ scrip_name }}
+      models:
+        - name: {{ strategy }}
+          signal: {{ direction }}
+          reward_factor: {{ reward_factor }}
+          risk_reward_ratio: 0.8
+          trail_sl_factor: 0.5
