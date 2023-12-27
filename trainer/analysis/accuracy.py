@@ -33,12 +33,12 @@ def run_base_accuracy(params: list[dict], scrip_data: ScripData = None, exec_mod
     bt_stats.to_csv(BASE_ACCURACY_FILE, float_format='%.2f', index=False)
     bt_trades.to_csv(BASE_TRADES_FILE, float_format='%.2f', index=False)
 
-    for key, mtm_df in bt_mtm.items():
-        if len(mtm_df) > 0:
-            logger.info(f"Processing {key}")
-            scrip, strategy = key.split(":")
-            file = os.path.join(cfg['generated'], scrip, f'{strategy}.{scrip}_Base_Raw_Trades_MTM.csv')
-            mtm_df.to_csv(file, float_format='%.2f', index=False)
+    # for key, mtm_df in bt_mtm.items():
+    #     if len(mtm_df) > 0:
+    #         logger.info(f"Processing {key}")
+    #         scrip, strategy = key.split(":")
+    #         file = os.path.join(cfg['generated'], scrip, f'{strategy}.{scrip}_Base_Raw_Trades_MTM.csv')
+    #         mtm_df.to_csv(file, float_format='%.2f', index=False)
     return bt_stats
 
 
@@ -74,18 +74,32 @@ def load_mtm(trader_db: DatabaseEngine):
             logger.info(f"Processing Scrip:{scrip_} & Strategy:{strategy_}")
             file = str(os.path.join(cfg['generated'], scrip_,
                                     f'trainer.strategies.{strategy_}.{scrip_}_RF_Raw_Trades_MTM.csv'))
-            df = pd.read_csv(file)
-            if len(df) == 0:
-                logger.error("Empty Trades MTM File")
-            else:
-                predicate = (f"m.{TRADES_MTM_TABLE}.scrip == '{scrip_}',"
-                             f"m.{TRADES_MTM_TABLE}.strategy == 'trainer.strategies.{strategy_}',"
-                             f"m.{TRADES_MTM_TABLE}.acct == 'Backtesting'")
-                trader_db.delete_recs(table=TRADES_MTM_TABLE, predicate=predicate)
-                df = df.assign(acct='Backtesting')
-                df.fillna(0, inplace=True)
-                trader_db.bulk_insert(table=TRADES_MTM_TABLE, data=df)
-                logger.info(f"Added {len(df)} records into Trades MTM Table")
+            try:
+                df = pd.read_csv(file)
+                if len(df) == 0:
+                    logger.error("Empty Trades MTM File")
+                else:
+                    predicate = (f"m.{TRADES_MTM_TABLE}.scrip == '{scrip_}',"
+                                 f"m.{TRADES_MTM_TABLE}.strategy == 'trainer.strategies.{strategy_}',"
+                                 f"m.{TRADES_MTM_TABLE}.acct == 'Backtesting'")
+                    trader_db.delete_recs(table=TRADES_MTM_TABLE, predicate=predicate)
+                    df = df.assign(acct='Backtesting')
+                    df.fillna(0, inplace=True)
+                    trader_db.bulk_insert(table=TRADES_MTM_TABLE, data=df)
+                    logger.info(f"Added {len(df)} records into Trades MTM Table")
+            except FileNotFoundError:
+                logger.error(f"File: {file} not found")
+
+    for scrip_ in cfg['steps']['scrips']:
+        for strategy_ in cfg['steps']['strats']:
+            logger.info(f"Processing Scrip:{scrip_} & Strategy:{strategy_}")
+            file = str(os.path.join(cfg['generated'], scrip_,
+                                    f'trainer.strategies.{strategy_}.{scrip_}_RF_Raw_Trades_MTM.csv'))
+            try:
+                logger.debug(f"About to remove {file}")
+                os.remove(file)
+            except FileNotFoundError:
+                logger.error(f"File: {file} not found")
 
 
 if __name__ == "__main__":
