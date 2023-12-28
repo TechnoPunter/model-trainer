@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from commons.broker.Shoonya import Shoonya
 from commons.config.reader import cfg
-from commons.consts.consts import IST, MODEL_PREFIX, RF_ACCURACY_FILE, RF_TRADES_FILE
+from commons.consts.consts import IST, MODEL_PREFIX, RF_ACCURACY_FILE, RF_TRADES_FILE, BASE_ACCURACY_FILE
 from commons.dataprovider.ScripData import ScripData
 from commons.dataprovider.database import DatabaseEngine
 from commons.loggers.setup_logger import setup_logging
@@ -187,7 +187,7 @@ class Combiner:
                     f"and *disabled* pct_success > {min_pct_success}")
         return self.pred.loc[
             (self.pred.pct_ret > min_pct_ret)
-            # & (self.pred.pct_success > min_pct_success)
+            & (self.pred.pct_success > min_pct_success)
         ]
 
     def __get_accuracy_pred_next_close(self, pred: pd.DataFrame = None, accuracy: pd.DataFrame = None):
@@ -202,7 +202,7 @@ class Combiner:
         if pred is None:
             pred = pd.read_csv(PRED_FILE)
         if accuracy is None:
-            accuracy = pd.read_csv(RF_ACCURACY_FILE)
+            accuracy = pd.read_csv(BASE_ACCURACY_FILE)
 
         curr_accuracy = accuracy.loc[
             accuracy.groupby(['scrip', 'strategy'])['trade_date'].transform(max) == accuracy['trade_date']]
@@ -228,7 +228,7 @@ class Combiner:
         """
         logger.debug("Starting __get_accuracy_pred_weighted_bt")
         if accuracy is None:
-            accuracy = pd.read_csv(RF_ACCURACY_FILE)
+            accuracy = pd.read_csv(BASE_ACCURACY_FILE)
         logger.debug(f"Pred:\n{pred}")
         logger.debug(f"Accuracy:\n{accuracy}")
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model", "date"],
