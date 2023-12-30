@@ -39,7 +39,6 @@ sh scripts/prod-setup.sh
 | run-rf-accuracy     | Uses the Raw Predictions from run-backtest plus reward factor & SL from base accuracy to get Portfolio Level: Accuracy, trades and minute-by-minute MTM file using the FastBT framework                                                                                      |
 | run-weighted-bt     | Uses Portfolio-Trades & RF Accuracy to <br/>Select scrip & strategy combinations for execution <br/>Distributes capital into weighted quantities on a backtesting basis<br/>Derives expected PNL with weighted quantity                                                      |
 | load-results        | Combines PNL data from run-analysis at portfolio level and stores the trades                                                                                                                                                                                                 |
-| load-trade-mtm      |                                                                                                                                                                                                                                                                              |
 
 ### Mode - Inputs & Outputs
 
@@ -56,7 +55,6 @@ sh scripts/prod-setup.sh
 | run-rf-accuracy     | N/A                                                                                                  | run-backtest<br/>run-base-accuracy | {scrip}/{strategy}.{scrip}.Raw_Pred<br/>Portfolio-Base-Accuracy         | Files:<br/>summary/Portfolio-Reward-Factor-Accuracy<br/>summary/Portfolio-Reward-Factor-Trades<br/>{scrip}/{scrip}_RF_Raw_Trades_MTM                |
 | run-weighted-bt     | steps.account.capital<br/>steps.accounts.threshold<br/>steps.weights<br/> steps.threshold (Fallback) | run-rf-accuracy                    | summary/Portfolio-Reward-Factor-Accuracy                                | File: summary/{acct}-BT-Trades                                                                                                                      |
 | load-results        | N/A                                                                                                  | run-analysis                       | Variable: ra_list (Dict)                                                | File: summary/{scrip}<br/>Table: TrainingResult                                                                                                     |
-| load-trade-mtm      | N/A                                                                                                  | run-rf-accuracy                    | File:summary/Portfolio-Trades-MTM                                       | Table: TradesMTM                                                                                                                                    |
 
 ### Mode - Generated File Layouts
 

@@ -62,9 +62,9 @@ def run_rf_accuracy(params: list[dict], scrip_data: ScripData = None, exec_mode:
     return bt_stats
 
 
-def load_mtm(trader_db: DatabaseEngine):
+def load_rf_mtm(trader_db: DatabaseEngine):
     """
-    Reads the TRADES_MTM_FILE file
+    Reads the RF TRADES_MTM_FILE file
     Deletes & inserts MTM records into Trades_MTM table in Database
     :param:
     :return: None
@@ -88,6 +88,70 @@ def load_mtm(trader_db: DatabaseEngine):
                 logger.info(f"Added {len(df)} records into Trades MTM Table")
 
 
+def load_rf_accuracy_results(trader_db: DatabaseEngine):
+    """
+    Reads the RF_ACCURACY_FILE, RF_TRADES_FILE files
+    Deletes & inserts BacktestAccuracySummary & BacktestAccuracyTrades tables in Database
+    :param:
+    :return: None
+    """
+    logger.info(f"Processing RF_ACCURACY_FILE")
+    rf_accu_summary = pd.read_csv(RF_ACCURACY_FILE)
+    if len(rf_accu_summary) == 0:
+        logger.error("Empty RF_ACCURACY_FILE")
+    else:
+        predicate = f"m.{BT_ACCURACY_SUMMARY}.run_type == 'REWARD_FACTOR'"
+        trader_db.delete_recs(table=BT_ACCURACY_SUMMARY, predicate=predicate)
+        rf_accu_summary = rf_accu_summary.assign(run_type='REWARD_FACTOR')
+        rf_accu_summary.fillna(0, inplace=True)
+        trader_db.bulk_insert(table=BT_ACCURACY_SUMMARY, data=rf_accu_summary)
+        logger.info(f"Added {len(rf_accu_summary)} records into BT_ACCURACY_SUMMARY")
+
+    logger.info(f"Processing RF_TRADES_FILE")
+    rf_accu_trades = pd.read_csv(RF_TRADES_FILE)
+    if len(rf_accu_trades) == 0:
+        logger.error("Empty RF_TRADES_FILE")
+    else:
+        predicate = f"m.{BT_ACCURACY_TRADES}.run_type == 'REWARD_FACTOR'"
+        trader_db.delete_recs(table=BT_ACCURACY_TRADES, predicate=predicate)
+        rf_accu_trades = rf_accu_trades.assign(run_type='REWARD_FACTOR')
+        rf_accu_trades.fillna(0, inplace=True)
+        trader_db.bulk_insert(table=BT_ACCURACY_TRADES, data=rf_accu_trades)
+        logger.info(f"Added {len(rf_accu_trades)} records into BT_ACCURACY_TRADES")
+
+
+def load_base_accuracy_results(trader_db: DatabaseEngine):
+    """
+    Reads the BASE_ACCURACY_FILE, BASE_TRADES_FILE files
+    Deletes & inserts BacktestAccuracySummary & BacktestAccuracyTrades tables in Database
+    :param:
+    :return: None
+    """
+    logger.info(f"Processing BASE_ACCURACY_FILE")
+    base_accu_summary = pd.read_csv(BASE_ACCURACY_FILE)
+    if len(base_accu_summary) == 0:
+        logger.error("Empty BASE_ACCURACY_FILE")
+    else:
+        predicate = f"m.{BT_ACCURACY_SUMMARY}.run_type == 'BASE'"
+        trader_db.delete_recs(table=BT_ACCURACY_SUMMARY, predicate=predicate)
+        base_accu_summary = base_accu_summary.assign(run_type='BASE')
+        base_accu_summary.fillna(0, inplace=True)
+        trader_db.bulk_insert(table=BT_ACCURACY_SUMMARY, data=base_accu_summary)
+        logger.info(f"Added {len(base_accu_summary)} records into BT_ACCURACY_SUMMARY")
+
+    logger.info(f"Processing BASE_TRADES_FILE")
+    base_accu_trades = pd.read_csv(BASE_TRADES_FILE)
+    if len(base_accu_trades) == 0:
+        logger.error("Empty BASE_TRADES_FILE")
+    else:
+        predicate = f"m.{BT_ACCURACY_TRADES}.run_type == 'BASE'"
+        trader_db.delete_recs(table=BT_ACCURACY_TRADES, predicate=predicate)
+        base_accu_trades = base_accu_trades.assign(run_type='BASE')
+        base_accu_trades.fillna(0, inplace=True)
+        trader_db.bulk_insert(table=BT_ACCURACY_TRADES, data=base_accu_trades)
+        logger.info(f"Added {len(base_accu_trades)} records into BT_ACCURACY_TRADES")
+
+
 if __name__ == "__main__":
     from commons.loggers.setup_logger import setup_logging
 
@@ -95,5 +159,7 @@ if __name__ == "__main__":
     db = DatabaseEngine()
     # x = run_accuracy(db)
     # x.to_clipboard()
-    load_mtm(db)
+    # load_rf_mtm(db)
+    load_rf_accuracy_results(db)
+    load_base_accuracy_results(db)
     print("Done")
