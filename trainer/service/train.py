@@ -11,7 +11,8 @@ from commons.dataprovider.database import DatabaseEngine
 from commons.loggers.setup_logger import setup_logging
 from commons.service.ScripDataService import ScripDataService
 
-from trainer.analysis.accuracy import run_base_accuracy, load_mtm, run_rf_accuracy, run_prep_data
+from trainer.analysis.accuracy import run_base_accuracy, load_rf_mtm, run_rf_accuracy, run_prep_data, \
+    load_base_accuracy_results, load_rf_accuracy_results
 from trainer.analysis.combiner import Combiner
 from trainer.analysis.resultranker import rank_results
 from trainer.analysis.results import Result
@@ -324,12 +325,12 @@ class ModelTrainer:
 
             if "run-base-accuracy" in opts:
                 run_base_accuracy(params=params, scrip_data=self.sd, exec_mode=self.exec_mode)
+                load_base_accuracy_results(self.trader_db)
 
             if "run-rf-accuracy" in opts:
                 run_rf_accuracy(params=params, scrip_data=self.sd, exec_mode=self.exec_mode)
-
-        if "load-trade-mtm" in opts:
-            load_mtm(self.trader_db)
+                load_rf_accuracy_results(self.trader_db)
+                load_rf_mtm(self.trader_db)
 
         if "run-weighted-bt" in opts:
             c = Combiner(shoonya=self.s, scrip_data=self.sd)
