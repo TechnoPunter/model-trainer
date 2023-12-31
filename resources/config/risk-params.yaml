@@ -17,7 +17,7 @@ risk-params:
   defaults:
     reward_factor: 0.0
     risk_reward_ratio: 1.0
-    trail_sl_factor: 0.25
+    trail_sl_factor: 0.1
 #  scrips:
 #    - scripName: NSE_APOLLOHOSP
 #      models:

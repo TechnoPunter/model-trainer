@@ -21,7 +21,8 @@ full outer join rf_bt_accuracy_trades rf
 on base.scrip = rf.scrip
 and base.strategy = rf. strategy
 and base."date" = rf."date"
-where base.signal = '-1'
+where 1=1
+--and base.signal = '1'
 order by scrip, strategy, "date"
 ;
 
