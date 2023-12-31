@@ -16,433 +16,433 @@ risk-params:
     - Trader-V2-Mahi
   defaults:
     reward_factor: 0.0
-    risk_reward_ratio: 0.8
-    trail_sl_factor: 0.5
-  scrips:
-    - scripName: NSE_APOLLOHOSP
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.44
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_AXISBANK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: -0.14
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BAJFINANCE
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.19
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BAJAJFINSV
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.18
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BPCL
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.64
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BPCL
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: -0.28
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BHARTIARTL
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.76
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BHARTIARTL
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: -0.14
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BRITANNIA
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.56
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HCLTECH
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.42
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HCLTECH
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.24
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HDFCBANK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.75
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HEROMOTOCO
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: 1.76
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HINDALCO
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.16
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_ICICIBANK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: -0.1
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_JSWSTEEL
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.6
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_JSWSTEEL
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.06
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_LTIM
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.49
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_MARUTI
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.56
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_POWERGRID
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.45
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_POWERGRID
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: -0.28
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_SUNPHARMA
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.57
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_SUNPHARMA
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: -0.12
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TCS
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.57
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TECHM
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: 1
-          reward_factor: 0.58
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TITAN
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: 0.06
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_ULTRACEMCO
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: 1
-          reward_factor: -0.13
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_APOLLOHOSP
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.29
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BAJFINANCE
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: 0.59
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BAJAJFINSV
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.02
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_CIPLA
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.06
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_COALINDIA
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: 0.27
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_DIVISLAB
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.7
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_GRASIM
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.15
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HDFCBANK
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.9
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HDFCBANK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.02
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HEROMOTOCO
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.27
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_HINDUNILVR
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.68
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_ICICIBANK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.49
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_ITC
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.19
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_INDUSINDBK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.02
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_INFY
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.24
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_KOTAKBANK
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.09
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_LTIM
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.38
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_LT
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.22
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_NTPC
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.04
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_NESTLEIND
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: 0.0
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_NESTLEIND
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.28
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_ONGC
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.25
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_SBILIFE
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.43
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_SBIN
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.9
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_SBIN
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.34
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TATACONSUM
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: 0.02
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TATAMOTORS
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.15
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TATASTEEL
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.9
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TATASTEEL
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.3
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TECHM
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.22
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_TITAN
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.35
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_UPL
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.71
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_UPL
-      models:
-        - name: trainer.strategies.rfcV2
-          signal: -1
-          reward_factor: -0.06
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
-    - scripName: NSE_BANDHANBNK
-      models:
-        - name: trainer.strategies.gspcV2
-          signal: -1
-          reward_factor: -0.78
-          risk_reward_ratio: 0.8
-          trail_sl_factor: 0.5
+    risk_reward_ratio: 1.0
+    trail_sl_factor: 0.1
+#  scrips:
+#    - scripName: NSE_APOLLOHOSP
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.44
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_AXISBANK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: -0.14
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BAJFINANCE
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.19
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BAJAJFINSV
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.18
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BPCL
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.64
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BPCL
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: -0.28
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BHARTIARTL
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.76
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BHARTIARTL
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: -0.14
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BRITANNIA
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.56
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HCLTECH
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.42
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HCLTECH
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.24
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HDFCBANK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.75
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HEROMOTOCO
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: 1.76
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HINDALCO
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.16
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_ICICIBANK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: -0.1
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_JSWSTEEL
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.6
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_JSWSTEEL
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.06
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_LTIM
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.49
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_MARUTI
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.56
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_POWERGRID
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.45
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_POWERGRID
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: -0.28
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_SUNPHARMA
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.57
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_SUNPHARMA
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: -0.12
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TCS
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.57
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TECHM
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: 1
+#          reward_factor: 0.58
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TITAN
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: 0.06
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_ULTRACEMCO
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: 1
+#          reward_factor: -0.13
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_APOLLOHOSP
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.29
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BAJFINANCE
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: 0.59
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BAJAJFINSV
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.02
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_CIPLA
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.06
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_COALINDIA
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: 0.27
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_DIVISLAB
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.7
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_GRASIM
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.15
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HDFCBANK
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.9
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HDFCBANK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.02
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HEROMOTOCO
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.27
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_HINDUNILVR
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.68
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_ICICIBANK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.49
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_ITC
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.19
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_INDUSINDBK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.02
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_INFY
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.24
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_KOTAKBANK
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.09
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_LTIM
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.38
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_LT
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.22
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_NTPC
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.04
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_NESTLEIND
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: 0.0
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_NESTLEIND
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.28
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_ONGC
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.25
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_SBILIFE
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.43
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_SBIN
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.9
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_SBIN
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.34
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TATACONSUM
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: 0.02
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TATAMOTORS
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.15
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TATASTEEL
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.9
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TATASTEEL
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.3
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TECHM
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.22
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_TITAN
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.35
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_UPL
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.71
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_UPL
+#      models:
+#        - name: trainer.strategies.rfcV2
+#          signal: -1
+#          reward_factor: -0.06
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
+#    - scripName: NSE_BANDHANBNK
+#      models:
+#        - name: trainer.strategies.gspcV2
+#          signal: -1
+#          reward_factor: -0.78
+#          risk_reward_ratio: 0.8
+#          trail_sl_factor: 0.5
