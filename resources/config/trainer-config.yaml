@@ -91,26 +91,26 @@ steps:
     entry_pct: 1
     pct_success: 1
     pct_ret: 1
-    cap_loading: 1.2
+    cap_loading: 1.0
   accounts:
     - name: Trader-V2-Alan
       capital: 100000
       threshold:
         min_pct_ret: 2
-        min_pct_success: 30
+        min_pct_success: 40
     - name: Trader-V2-Pralhad
       capital: 100000
       threshold:
         min_pct_ret: 2
-        min_pct_success: 30
+        min_pct_success: 40
     - name: Trader-V2-Sundar
       capital: 20000
       threshold:
         min_pct_ret: 2
-        min_pct_success: 30
+        min_pct_success: 40
     - name: Trader-V2-Mahi
       capital: 10000
       cap_loading: 1.0
       threshold:
         min_pct_ret: 2
-        min_pct_success: 85
+        min_pct_success: 50
