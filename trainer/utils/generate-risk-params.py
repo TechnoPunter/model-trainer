@@ -3,7 +3,10 @@ import pandas as pd
 from commons.consts.consts import RF_ACCURACY_FILE
 
 PATH = '../../resources/templates/risk-params.yaml'
-MIN_PCT_RETURNS = 2.0
+L_MIN_PCT_SUCCESS = 40.0
+S_MIN_PCT_SUCCESS = 30.0
+L_MIN_PCT_RETURNS = 2.0
+S_MIN_PCT_RETURNS = 2.0
 
 
 def get_scrip_config(data: dict):
@@ -21,7 +24,9 @@ def form_trade_params(accuracy_data: pd.DataFrame = None):
     results = ""
     curr_accuracy = accuracy_data.loc[
         accuracy_data.groupby(['scrip', 'strategy'])['trade_date'].transform(max) == accuracy_data['trade_date']]
-    l_filter_data = curr_accuracy.loc[(curr_accuracy.l_pct_returns >= MIN_PCT_RETURNS)]
+    l_filter_data = curr_accuracy.loc[(curr_accuracy.l_pct_returns >= L_MIN_PCT_RETURNS) &
+                                      (curr_accuracy.l_pct_success >= L_MIN_PCT_SUCCESS)]
+    l_filter_data.sort_values(by=['scrip', 'strategy'], inplace=True)
     for index, row in l_filter_data.iterrows():
         curr_dir = '1'
         params = {
@@ -32,7 +37,9 @@ def form_trade_params(accuracy_data: pd.DataFrame = None):
         }
         l_count += 1
         results += get_scrip_config(params)
-    s_filter_data = curr_accuracy.loc[(curr_accuracy.s_pct_returns >= MIN_PCT_RETURNS)]
+    s_filter_data = curr_accuracy.loc[(curr_accuracy.s_pct_returns >= S_MIN_PCT_RETURNS) &
+                                      (curr_accuracy.s_pct_success >= S_MIN_PCT_SUCCESS)]
+    s_filter_data.sort_values(by=['scrip', 'strategy'], inplace=True)
     for index, row in s_filter_data.iterrows():
         curr_dir = '-1'
         params = {
