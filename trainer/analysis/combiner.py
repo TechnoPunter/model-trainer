@@ -202,7 +202,7 @@ class Combiner:
         if pred is None:
             pred = pd.read_csv(PRED_FILE)
         if accuracy is None:
-            accuracy = pd.read_csv(BASE_ACCURACY_FILE)
+            accuracy = pd.read_csv(RF_ACCURACY_FILE)
 
         curr_accuracy = accuracy.loc[
             accuracy.groupby(['scrip', 'strategy'])['trade_date'].transform(max) == accuracy['trade_date']]
@@ -228,7 +228,7 @@ class Combiner:
         """
         logger.debug("Starting __get_accuracy_pred_weighted_bt")
         if accuracy is None:
-            accuracy = pd.read_csv(BASE_ACCURACY_FILE)
+            accuracy = pd.read_csv(RF_ACCURACY_FILE)
         logger.debug(f"Pred:\n{pred}")
         logger.debug(f"Accuracy:\n{accuracy}")
         df = pd.merge(pred, accuracy[ACCURACY_COLS], how="inner", left_on=["scrip", "model", "date"],
