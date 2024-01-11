@@ -169,3 +169,4 @@ cython_debug/
 /resources/test/resources/config/
 secret
 .vscode
+.DS_Store
