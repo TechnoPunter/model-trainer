@@ -162,6 +162,8 @@ class Combiner:
                 val.drop(columns=["strategy", "entry_pct", "pct_success", "pct_ret", "weight", "pct_weight", "alloc"],
                          axis=1, inplace=True)
                 val.to_csv(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'), index=False)
+            else:
+                os.remove(os.path.join(cfg['generated'], 'summary', key + '-Entries.csv'))
             logger.info(f"Entries generated for {key}")
 
         val_res = self.__validate()
