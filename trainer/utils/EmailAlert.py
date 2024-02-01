@@ -1,22 +1,10 @@
 import pandas as pd
-import requests
 
-from commons.config.reader import cfg
+from commons.utils.EmailAlert import send_email
 
 headers = {
     'Content-Type': 'application/x-www-form-urlencoded'
 }
-
-
-def send_email(body: str, subject: str = '', acct: str = ''):
-    subject = f'[Trader V3 Alert]' if subject == '' else '[Trader V3 Alert]: ' + subject
-    if acct == '':
-        recipients = cfg['email']['recipients']
-    else:
-        recipients = cfg['email']['acct-recipient'].get(acct, 'pro.kamath%40gmail.com')
-    data = f"email={recipients}&subject={subject}&body={body}"
-    response = requests.request("POST", cfg['email']['url'], headers=headers, data=data)
-    return response
 
 
 def send_df_email(df: pd.DataFrame, subject: str = '', acct: str = ''):
