@@ -1,6 +1,6 @@
 email:
-  url: "http://trader.technotrix.co.in/emailservice.php"
-  recipients: 'pro.kamath%40gmail.com%2Calansaviolobo%40gmail.com%2Cssundarganesh%40gmail.com%2Cmahipraneeth948@gmail.com'
+  url: "http://103.225.100.138:8080/www/emailservice.php"
+  recipients: 'technopunter@googlegroups.com'
   acct-recipient:
     Trader-V2-Alan: alansaviolobo%40gmail.com
     Trader-V2-Pralhad: pro.kamath%40gmail.com
